@@ -4,7 +4,7 @@ const db = require("../index");
 const User = db.define(
   `User`,
   {
-    spotify_id: { type: DataTypes.INTEGER, unique: true },
+    spotify_id: { type: DataTypes.STRING, unique: true },
     email: {
       type: DataTypes.STRING,
       unique: true,
