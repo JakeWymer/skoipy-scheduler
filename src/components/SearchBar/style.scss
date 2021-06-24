@@ -1,0 +1,19 @@
+@import "../../styles/colors.scss";
+
+.search-wrapper {
+  height: 300px;
+  overflow: auto;
+
+  .search-result {
+    align-items: center;
+    display: flex;
+
+    img {
+      width: 80px;
+    }
+
+    .sub-header {
+      color: #847979;
+    }
+  }
+}

@@ -1,0 +1,29 @@
+@import "../../styles/colors.scss";
+
+.button-wrapper {
+  cursor: pointer;
+  padding: 5px 10px;
+  width: fit-content;
+
+  &.primary-theme {
+    background-color: $navy-blue;
+    border: none;
+    border-radius: 5px;
+    color: white;
+
+    &:hover {
+      background-color: lighten($navy-blue, 10);
+    }
+  }
+
+  &.secondary-theme {
+    background-color: white;
+    border: 1px solid $light-purple;
+    border-radius: 5px;
+    color: $navy-blue;
+
+    &:hover {
+      background-color: lighten($light-purple, 15);
+    }
+  }
+}

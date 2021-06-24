@@ -1,0 +1,11 @@
+@import "../../styles/colors.scss";
+
+header {
+  align-items: center;
+  background-color: $navy-blue;
+  color: white;
+  display: flex;
+  height: 10vh;
+  justify-content: space-between;
+  padding: 0px 25px;
+}
