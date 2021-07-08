@@ -27,6 +27,8 @@ router.get(
   middleware.checkAuth,
   generatorController.handleSearch
 );
+router.get("/me", authController.getUser);
+router.get("/logout", authController.logOut);
 
 router.post(
   `/generators`,
