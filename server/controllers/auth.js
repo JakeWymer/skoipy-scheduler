@@ -15,6 +15,24 @@ const GrantType = {
   REFRESH_TOKEN: `refresh_token`,
 };
 
+const getUser = async (ctx) => {
+  const userId = ctx.session?.userId;
+  if (userId) {
+    const user = await UserModel.findOne({
+      where: {
+        id: userId,
+      },
+    });
+    return (ctx.body = user);
+  }
+  return (ctx.body = null);
+};
+
+const logOut = (ctx) => {
+  ctx.session = null;
+  return (ctx.status = 200);
+};
+
 // Essentially our login function
 const spotifyCallback = async (ctx) => {
   const authCode = ctx.request.query?.code;
@@ -108,6 +126,8 @@ const getSpotifyUser = async (accessToken) => {
 };
 
 module.exports = {
+  getUser,
+  logOut,
   spotifyAuthUrl,
   spotifyCallback,
   fetchTokens,

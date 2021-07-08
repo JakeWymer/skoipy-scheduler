@@ -23,7 +23,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     axios.get(`/generators`).then(({ data: generators }) => {
-      console.log(generators);
       setUserGenerators(generators);
     });
   }, []);
@@ -81,9 +80,8 @@ const Dashboard = () => {
   };
 
   const mapGenerators = () => {
-    console.log(userGenerators);
     return userGenerators.map((generator, i) => {
-      return <GeneratorCard generator={generator} />;
+      return <GeneratorCard key={i} generator={generator} />;
     });
   };
 
