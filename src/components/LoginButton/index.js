@@ -20,9 +20,9 @@ const LoginButton = () => {
     return <div></div>;
   }
   return (
-    <div className="login-button">
-      <a href={spotifyLoginUrl}>Login with Spotify</a>
-    </div>
+    <a href={spotifyLoginUrl}>
+      <div className="login-button">Login with Spotify</div>
+    </a>
   );
 };
 

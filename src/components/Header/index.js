@@ -27,7 +27,7 @@ const Header = () => {
   return (
     <header>
       <div>
-        <h1>Skoip</h1>
+        <div className="title">Skoip</div>
       </div>
       <div>
         {!isLoggedIn ? (

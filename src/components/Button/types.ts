@@ -1,6 +1,7 @@
 export enum ButtonTheme {
   PRIMARY = `primary`,
   SECONDARY = `secondary`,
+  DISCORD = `discord`,
 }
 
 export type ButtonProps = {
