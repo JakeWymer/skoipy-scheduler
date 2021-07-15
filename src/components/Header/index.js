@@ -29,13 +29,7 @@ const Header = () => {
       <div>
         <div className="title">Skoip</div>
       </div>
-      <div>
-        {!isLoggedIn ? (
-          <LoginButton />
-        ) : (
-          <Button text="Log out" clickHandler={logout} />
-        )}
-      </div>
+      <div>{isLoggedIn && <Button text="Log out" clickHandler={logout} />}</div>
     </header>
   );
 };

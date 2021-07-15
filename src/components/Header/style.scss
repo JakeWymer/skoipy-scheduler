@@ -2,7 +2,7 @@
 
 header {
   align-items: center;
-  background-color: $navy-blue;
+  background: linear-gradient(90deg, $skoip-navy 3.38%, $skoip-green 100%);
   color: white;
   display: flex;
   height: 10vh;
@@ -12,4 +12,5 @@ header {
 
 .title {
   font-size: 32px;
+  font-weight: bold;
 }
