@@ -1,5 +1,7 @@
+@import "../../styles/colors.scss";
+
 .login-button {
-  background-color: #1db954;
+  background-color: $spotify-green;
   border-radius: 5px;
   color: white;
   font-weight: bold;

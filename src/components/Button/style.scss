@@ -6,13 +6,13 @@
   width: fit-content;
 
   &.primary-theme {
-    background-color: $navy-blue;
+    background-color: $skoip-navy;
     border: none;
     border-radius: 5px;
     color: white;
 
     &:hover {
-      background-color: lighten($navy-blue, 10);
+      background-color: lighten($skoip-navy, 10);
     }
   }
 
@@ -20,7 +20,7 @@
     background-color: white;
     border: 1px solid $light-purple;
     border-radius: 5px;
-    color: $navy-blue;
+    color: $skoip-navy;
 
     &:hover {
       background-color: lighten($light-purple, 15);

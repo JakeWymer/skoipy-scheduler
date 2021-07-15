@@ -9,7 +9,7 @@ section {
 }
 
 .hero {
-  background: linear-gradient(94.16deg, #3a405a 3.38%, #85cb7f 100%);
+  background: linear-gradient(90deg, $skoip-navy 3.38%, $skoip-green 100%);
   color: white;
   text-align: center;
   justify-content: center;
@@ -32,6 +32,6 @@ section {
 }
 
 .playlist-generator {
-  background-color: $navy-blue;
+  background-color: $skoip-navy;
   color: white;
 }
