@@ -13,7 +13,7 @@ import PlaylistLogo from "./Assets/playlist-logo.svg";
 const Home = () => {
   const handleDiscordButton = () => {
     window.location.href =
-      "https://discord.com/api/oauth2/authorize?client_id=857564853743648788&permissions=2150631424&scope=bot%20applications.commands";
+      "https://discord.com/api/oauth2/authorize?client_id=594723147538890753&permissions=2150631424&scope=bot%20applications.commands";
   };
   return (
     <div>
