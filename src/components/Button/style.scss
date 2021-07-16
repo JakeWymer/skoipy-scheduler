@@ -19,11 +19,11 @@
 
   &.secondary-theme {
     background-color: white;
-    border: 1px solid $light-purple;
+    border: 1px solid $skoip-navy;
     color: $skoip-navy;
 
     &:hover {
-      background-color: lighten($light-purple, 15);
+      background-color: lighten($skoip-navy, 15);
     }
   }
 

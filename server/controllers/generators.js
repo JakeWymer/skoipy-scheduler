@@ -47,6 +47,7 @@ const generatePlaylist = async (ctx) => {
     });
     const playlist = await createPlaylist(user, generator.name);
     await addTracksToPlaylist(user.accessToken, playlist.id, trackUris);
+    ctx.response.body = `${generator.name} generated!`;
   } catch (err) {
     console.log(err);
   }

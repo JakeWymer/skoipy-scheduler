@@ -1,0 +1,13 @@
+@import "./styles/colors.scss";
+
+.content {
+  padding: 0px 0px;
+}
+
+.Toastify__toast--success {
+  background-color: $skoip-green;
+}
+
+.Toastify__toast--error {
+  background-color: $skoip-red;
+}
