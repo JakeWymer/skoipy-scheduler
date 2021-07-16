@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState } from "react";
 import Button from "../../components/Button";
 import { Link, Redirect, useLocation, useParams } from "react-router-dom";
@@ -6,12 +5,12 @@ import MoonLoader from "react-spinners/MoonLoader";
 import { ButtonTheme } from "../../components/Button/types";
 import Input from "../../components/Input";
 import { SeedType } from "../../components/SearchBar/types";
-import { errorToast, successToast } from "../../utils";
 import { Generator, GeneratorSeed } from "../Dashboard/types";
 import SearchBar from "../../components/SearchBar";
 
 import style from "./style.module.scss";
 import { useEffect } from "react";
+import ApiClient from "../../api";
 
 type GeneratorBuilderProps = {
   setUserGenerators: any;
@@ -70,18 +69,18 @@ const GeneratorBuilder = (props: GeneratorBuilderProps) => {
 
   const createGenerator = async () => {
     setIsLoading(true);
-    const { data: generatorsResponse } = await axios.post("/generators", {
-      generatorSeeds,
-      generatorName,
-    });
+    await ApiClient.post(
+      "/generators",
+      {
+        generatorSeeds,
+        generatorName,
+      },
+      `Unable to create ${generatorName}`,
+      `Created ${generatorName}`
+    );
     setIsLoading(false);
     setGeneratorSeeds([]);
     setGeneratorName(``);
-    if (generatorsResponse.error) {
-      errorToast(generatorsResponse.error);
-    } else {
-      successToast(`Created ${generatorName}`);
-    }
     setShouldRedirect(true);
   };
 

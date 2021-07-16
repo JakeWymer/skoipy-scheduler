@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Button from "../../components/Button";
 import Modal from "react-modal";
-import { Generator } from "./types";
+import { Generator, GeneratorResponse } from "./types";
 import GeneratorCard from "../../components/GeneratorCard";
 import styles from "./style.module.scss";
 import { Link } from "react-router-dom";
 import { AuthProps } from "../../AuthedRoute";
 import SpinnerOrComponent from "../../components/SpinnerOrComponent";
+import ApiClient from "../../api";
 
 const Dashboard = (props: AuthProps) => {
   Modal.setAppElement("#root");
@@ -16,10 +16,12 @@ const Dashboard = (props: AuthProps) => {
   const [userGenerators, setUserGenerators] = useState<Generator[]>([]);
 
   useEffect(() => {
-    axios.get(`/generators`).then(({ data: generators }) => {
-      setUserGenerators(generators);
-      setIsLoading(false);
-    });
+    ApiClient.get<GeneratorResponse>(`/generators`).then(
+      (response: GeneratorResponse) => {
+        setUserGenerators(response.generators);
+        setIsLoading(false);
+      }
+    );
   }, []);
 
   const handleModal = () => {

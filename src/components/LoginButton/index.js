@@ -1,5 +1,5 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
+import ApiClient from "../../api";
 import Button from "../Button/index";
 import { ButtonTheme } from "../Button/types";
 import "./style.scss";
@@ -10,7 +10,7 @@ const LoginButton = () => {
 
   useEffect(() => {
     const fetchSpotifyLoginUrl = async () => {
-      const data = await axios.get(`/spotify/auth/url`);
+      const data = await ApiClient.get(`/spotify/auth/url`);
       return data.data;
     };
     fetchSpotifyLoginUrl().then((url) => {
