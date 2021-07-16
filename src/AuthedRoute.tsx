@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Route, Redirect } from "react-router";
+import LoadingSpinner from "./components/LoadingSpinner";
 import { warningToast } from "./utils";
 
 type AuthedRouteProps = {
@@ -37,7 +38,7 @@ const AuthedRoute = (props: AuthedRouteProps) => {
   }, []);
 
   if (isLoading) {
-    return <div></div>;
+    return <LoadingSpinner />;
   }
 
   if (!user) {
