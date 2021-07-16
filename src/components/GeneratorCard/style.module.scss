@@ -12,8 +12,16 @@
   justify-content: space-between;
   padding: 20px;
   margin: 20px;
+  position: relative;
 
   .generator_card_title {
     font-size: 25px;
+  }
+
+  .edit_icon {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 30px;
   }
 }

@@ -15,10 +15,12 @@ const Input = (props: InputProps) => {
     )[0] as HTMLInputElement;
     input.style.fontSize = `${props.fontSize ? props.fontSize : 16}px`;
   }, []);
+
   return (
     <div>
       <input
         className="input"
+        value={props.value}
         onChange={props.handleChange}
         placeholder={props.placeholder ? props.placeholder : ``}
       />

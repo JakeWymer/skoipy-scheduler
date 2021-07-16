@@ -23,7 +23,7 @@ const getUser = async (ctx) => {
         id: userId,
       },
     });
-    return (ctx.body = user);
+    return (ctx.body = user.toJson());
   }
   return (ctx.body = null);
 };
@@ -44,6 +44,7 @@ const spotifyCallback = async (ctx) => {
         const spotifyUser = await getSpotifyUser(accessToken);
         const user = await getOrCreateUser(
           spotifyUser.id,
+          spotifyUser.display_name,
           spotifyUser.email,
           refreshToken
         );
@@ -100,7 +101,7 @@ const fetchTokens = async (grantType, grantValue) => {
   }
 };
 
-const getOrCreateUser = async (spotifyId, email, refreshToken) => {
+const getOrCreateUser = async (spotifyId, displayName, email, refreshToken) => {
   const user = await UserModel.findOne({
     where: {
       spotify_id: spotifyId,
@@ -110,6 +111,7 @@ const getOrCreateUser = async (spotifyId, email, refreshToken) => {
     // const encryptedToken = await encryptToken(refreshToken);
     return await UserModel.create({
       email,
+      username: displayName,
       spotify_id: spotifyId,
       refresh_token: refreshToken,
     });

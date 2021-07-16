@@ -5,6 +5,7 @@ const User = db.define(
   `User`,
   {
     spotify_id: { type: DataTypes.STRING, unique: true },
+    username: { type: DataTypes.STRING },
     email: {
       type: DataTypes.STRING,
       unique: true,
@@ -20,27 +21,14 @@ const User = db.define(
   }
 );
 
+User.prototype.toJson = function () {
+  return {
+    id: this.id,
+    username: this.username,
+    email: this.email,
+  };
+};
+
 User.sync({ alter: true });
-
-// import { DataTypes, Model } from "https://deno.land/x/denodb/mod.ts";
-
-// class User extends Model {
-//   static table = "users";
-//   static timestamps = true;
-
-//   static fields = {
-//     id: { primaryKey: true, autoIncrement: true },
-//     spotify_id: { type: DataTypes.INTEGER, unique: true },
-//     email: {
-//       type: DataTypes.STRING,
-//       unique: true,
-//       allowNull: false,
-//     },
-//     refresh_token: {
-//       type: DataTypes.STRING,
-//       allowNull: false,
-//     },
-//   };
-// }
 
 module.exports = User;
