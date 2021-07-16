@@ -6,8 +6,9 @@ import { Generator } from "./types";
 import GeneratorCard from "../../components/GeneratorCard";
 import styles from "./style.module.scss";
 import { Link } from "react-router-dom";
+import { AuthProps } from "../../AuthedRoute";
 
-const Dashboard = () => {
+const Dashboard = (props: AuthProps) => {
   Modal.setAppElement("#root");
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -32,13 +33,17 @@ const Dashboard = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.greeting}>
-        <h1>Heyoo</h1>
+        <h1>Heyoo, {props.user.username}!</h1>
       </div>
       <Link to="/generator/new">
         <Button text="Schedule New Generator" clickHandler={handleModal} />
       </Link>
       <hr />
-      <div className={styles.generator_cards_wrapper}>{mapGenerators()}</div>
+      <div className={styles.generator_cards_wrapper}>
+        {userGenerators.length
+          ? mapGenerators()
+          : "Add some generators to view them here"}
+      </div>
     </div>
   );
 };
