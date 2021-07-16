@@ -2,25 +2,35 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Route, Redirect } from "react-router";
-import { errorToast } from "./utils";
+import { warningToast } from "./utils";
 
 type AuthedRouteProps = {
   authedComponent: any;
   path: string;
 };
 
+type User = {
+  id: number;
+  username: string;
+  email: string;
+};
+
+export type AuthProps = {
+  user: User;
+};
+
 const AuthedRoute = (props: AuthedRouteProps) => {
   const { authedComponent, path } = props;
-  const [isAuthed, setIsAuthed] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     axios.get("/me").then((res) => {
-      if (!!res.data) {
-        setIsAuthed(true);
-        console.log(res.data);
+      const user = res.data;
+      if (!!user) {
+        setUser(user);
       } else {
-        errorToast("Please log in");
+        warningToast("Please log in");
       }
       setIsLoading(false);
     });
@@ -30,11 +40,15 @@ const AuthedRoute = (props: AuthedRouteProps) => {
     return <div></div>;
   }
 
-  if (!isAuthed) {
+  if (!user) {
     return <Redirect to="/" />;
   }
 
-  return <Route exact path={path} component={authedComponent} />;
+  return (
+    <Route exact path={path}>
+      <props.authedComponent user={user} />
+    </Route>
+  );
 };
 
 export default AuthedRoute;

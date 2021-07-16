@@ -13,6 +13,18 @@ export const errorToast = (message: string) => {
   });
 };
 
+export const warningToast = (message: string) => {
+  return toast.warning(message, {
+    position: "bottom-left",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+
 export const successToast = (message: string) => {
   return toast.success(message, {
     position: "bottom-left",
