@@ -1,3 +1,4 @@
+import { BaseApiResponse } from "../../api";
 import { SeedType } from "../../components/SearchBar/types";
 
 export type GeneratorSeed = {
@@ -14,3 +15,7 @@ export type Generator = {
   name: string;
   seeds: GeneratorSeed[];
 };
+
+export interface GeneratorResponse extends BaseApiResponse {
+  generators: Generator[];
+}

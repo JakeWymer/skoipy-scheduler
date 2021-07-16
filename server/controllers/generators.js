@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const GeneratorModel = require("../db/models/Generator");
+const logger = require("../logger");
 
 const handleSearch = async (ctx) => {
   const { accessToken } = ctx.state.user;
@@ -34,6 +35,7 @@ const createGenerator = async (ctx) => {
 };
 
 const generatePlaylist = async (ctx) => {
+  const response = { isError: false };
   try {
     const generatorId = parseInt(ctx.params.id);
     const user = ctx.state.user;
@@ -47,15 +49,24 @@ const generatePlaylist = async (ctx) => {
     });
     const playlist = await createPlaylist(user, generator.name);
     await addTracksToPlaylist(user.accessToken, playlist.id, trackUris);
-    ctx.response.body = `${generator.name} generated!`;
+    ctx.response.body = response;
   } catch (err) {
     console.log(err);
+    response.isError = true;
+    ctx.response.body = response;
   }
 };
 
 const getUserGenerators = async (ctx) => {
-  const userGenerators = await getGeneratorsByOwnerId(ctx.state.user.id);
-  ctx.response.body = userGenerators;
+  const response = { isError: false, generators: [] };
+  try {
+    const userGenerators = await getGeneratorsByOwnerId(ctx.state.user.id);
+    response.generators = userGenerators;
+  } catch (err) {
+    logger.error(err);
+    response.isError = true;
+  }
+  ctx.response.body = response;
 };
 
 const getGeneratorsByOwnerId = async (ownerId) => {

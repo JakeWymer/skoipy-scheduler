@@ -1,8 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import ApiClient, { BaseApiResponse } from "../../api";
 import { Generator } from "../../pages/Dashboard/types";
-import { successToast } from "../../utils";
 import Button from "../Button";
 import { ButtonTheme } from "../Button/types";
 import SpinnerOrComponent from "../SpinnerOrComponent";
@@ -18,11 +17,13 @@ const GeneratorCard = (props: GeneratorCardProps) => {
 
   const generatePlaylist = async () => {
     setIsGenerating(true);
-    const res = await axios.post(`/generators/${props.generator.id}/generate`);
+    await ApiClient.post<BaseApiResponse>(
+      `/generators/${props.generator.id}/generate`,
+      {},
+      `An error occurred`,
+      `${props.generator.name} generated!`
+    );
     setIsGenerating(false);
-    if (!res.data?.error) {
-      successToast(res.data);
-    }
   };
 
   const generateButtonRenderer = () => {

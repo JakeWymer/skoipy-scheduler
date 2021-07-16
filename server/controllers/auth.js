@@ -23,7 +23,7 @@ const getUser = async (ctx) => {
         id: userId,
       },
     });
-    return (ctx.body = user.toJson());
+    return (ctx.body = { user: user.toJson() });
   }
   return (ctx.body = null);
 };

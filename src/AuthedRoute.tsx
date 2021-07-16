@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Route, Redirect } from "react-router";
+import ApiClient, { BaseApiResponse } from "./api";
 import LoadingSpinner from "./components/LoadingSpinner";
 import { warningToast } from "./utils";
 
@@ -16,18 +16,22 @@ type User = {
   email: string;
 };
 
+export interface UserResponse extends BaseApiResponse {
+  user: User;
+}
+
 export type AuthProps = {
   user: User;
 };
 
 const AuthedRoute = (props: AuthedRouteProps) => {
-  const { authedComponent, path } = props;
+  const { path } = props;
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    axios.get("/me").then((res) => {
-      const user = res.data;
+    ApiClient.get<UserResponse>("/me").then((res) => {
+      const user = res.user;
       if (!!user) {
         setUser(user);
       } else {
