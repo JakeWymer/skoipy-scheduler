@@ -7,7 +7,7 @@ export enum ButtonTheme {
 }
 
 export type ButtonProps = {
-  clickHandler: any;
+  clickHandler?: any;
   text: string;
   theme?: ButtonTheme;
 };

@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { ButtonProps, ButtonTheme } from "./types";
 import "./style.scss";
+import { noop } from "../../utils";
 
 const Button = (props: ButtonProps) => {
   const classes: { [key: string]: boolean } = {
@@ -12,8 +13,10 @@ const Button = (props: ButtonProps) => {
     classes[`${ButtonTheme.PRIMARY}-theme`] = true;
   }
   const allClasses = classNames(classes);
+  const clickHandler = props.clickHandler || noop;
+
   return (
-    <div className={allClasses} onClick={props.clickHandler}>
+    <div className={allClasses} onClick={clickHandler}>
       {props.text}
     </div>
   );

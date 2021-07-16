@@ -24,3 +24,5 @@ export const successToast = (message: string) => {
     progress: undefined,
   });
 };
+
+export const noop = () => {};

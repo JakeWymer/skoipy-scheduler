@@ -1,7 +1,9 @@
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { Generator } from "../../pages/Dashboard/types";
 import Button from "../Button";
 import { ButtonTheme } from "../Button/types";
+import EditIcon from "./assets/edit.svg";
 import style from "./style.module.scss";
 
 export type GeneratorCardProps = {
@@ -14,6 +16,14 @@ const GeneratorCard = (props: GeneratorCardProps) => {
   };
   return (
     <div className={style.generator_card_wrapper}>
+      <Link
+        to={{
+          pathname: `/generator/${props.generator.id}/edit`,
+          state: { generator: props.generator },
+        }}
+      >
+        <img src={EditIcon} className={style.edit_icon} />
+      </Link>
       <h3 className={style.generator_card_title}>{props.generator.name}</h3>
       <div className={style.generator_card_buttons}>
         <Button
