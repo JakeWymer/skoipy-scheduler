@@ -10,8 +10,8 @@ const LoginButton = () => {
 
   useEffect(() => {
     const fetchSpotifyLoginUrl = async () => {
-      const data = await ApiClient.get(`/spotify/auth/url`);
-      return data.data;
+      const url = await ApiClient.get(`/spotify/auth/url`);
+      return url;
     };
     fetchSpotifyLoginUrl().then((url) => {
       setSpotifyLoginUrl(url);
