@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Button from "../Button/index";
+import { ButtonTheme } from "../Button/types";
 import "./style.scss";
 
 const LoginButton = () => {
@@ -19,10 +21,15 @@ const LoginButton = () => {
   if (loading) {
     return <div></div>;
   }
+  const handleSpotifyLogin = () => {
+    window.location.href = spotifyLoginUrl;
+  };
   return (
-    <a href={spotifyLoginUrl}>
-      <div className="login-button">Login with Spotify</div>
-    </a>
+    <Button
+      text="Login with Spotify"
+      theme={ButtonTheme.SPOTIFY}
+      clickHandler={handleSpotifyLogin}
+    />
   );
 };
 

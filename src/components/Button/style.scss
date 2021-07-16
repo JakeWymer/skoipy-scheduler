@@ -2,14 +2,15 @@
 
 .button-wrapper {
   cursor: pointer;
+  font-weight: bold;
   padding: 10px 20px;
   width: fit-content;
+  border: none;
+  color: white;
+  border-radius: 5px;
 
   &.primary-theme {
     background-color: $skoip-navy;
-    border: none;
-    border-radius: 5px;
-    color: white;
 
     &:hover {
       background-color: lighten($skoip-navy, 10);
@@ -19,7 +20,6 @@
   &.secondary-theme {
     background-color: white;
     border: 1px solid $light-purple;
-    border-radius: 5px;
     color: $skoip-navy;
 
     &:hover {
@@ -29,13 +29,25 @@
 
   &.discord-theme {
     background-color: $discord-purple;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    font-weight: bold;
 
     &:hover {
       background-color: lighten($discord-purple, 10);
+    }
+  }
+
+  &.spotify-theme {
+    background-color: $spotify-green;
+
+    &:hover {
+      background-color: lighten($spotify-green, 2);
+    }
+  }
+
+  &.green-theme {
+    background-color: $skoip-green;
+
+    &:hover {
+      background-color: lighten($skoip-green, 10);
     }
   }
 }

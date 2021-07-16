@@ -11,7 +11,7 @@ import { GeneratorSeed, Generator } from "./types";
 import Input from "../../components/Input";
 import { successToast, errorToast } from "../../utils";
 import GeneratorCard from "../../components/GeneratorCard";
-import "./style.scss";
+import styles from "./style.module.scss";
 
 const Dashboard = () => {
   Modal.setAppElement("#root");
@@ -86,14 +86,13 @@ const Dashboard = () => {
   };
 
   return (
-    <div>
-      <h1>Dashboard Page</h1>
-      <Button
-        text="Schedule New Generator"
-        theme={ButtonTheme.PRIMARY}
-        clickHandler={handleModal}
-      />
-      <div className="generator-cards">{mapGenerators()}</div>
+    <div className={styles.wrapper}>
+      <div className={styles.greeting}>
+        <h1>Heyoo</h1>
+      </div>
+      <Button text="Schedule New Generator" clickHandler={handleModal} />
+      <hr />
+      <div className={styles.generator_cards_wrapper}>{mapGenerators()}</div>
       <Modal isOpen={modalIsOpen} shouldCloseOnOverlayClick={true}>
         <h2>Add new Skoipy Generator</h2>
         <Input

@@ -1,9 +1,9 @@
 @import "../../styles/colors.scss";
 
-.generator-card-wrapper {
+.generator_card_wrapper {
   height: 300px;
   width: 400px;
-  background-color: $light-purple;
+  background-color: $skoip-navy;
   color: white;
   border-radius: 5px;
   display: flex;
@@ -11,8 +11,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px;
+  margin: 20px;
 
-  .generator-card-title {
+  .generator_card_title {
     font-size: 25px;
   }
 }
