@@ -1,5 +1,5 @@
 const fetch = require("node-fetch");
-const GeneratorModel = require("../db/models/Generator");
+const { Generator } = require("../models");
 const logger = require("../logger");
 
 const handleSearch = async (ctx) => {
@@ -21,7 +21,7 @@ const createGenerator = async (ctx) => {
   try {
     const body = ctx.request.body;
     const { generatorName, generatorSeeds } = body;
-    await GeneratorModel.create({
+    await Generator.create({
       owner_id: user.id,
       name: generatorName,
       seeds: generatorSeeds,
@@ -39,7 +39,7 @@ const generatePlaylist = async (ctx) => {
   try {
     const generatorId = parseInt(ctx.params.id);
     const user = ctx.state.user;
-    const generator = await GeneratorModel.findByPk(generatorId);
+    const generator = await Generator.findByPk(generatorId);
     const recommendedTracks = await getRecommendedTracks(
       user.accessToken,
       generator.seeds
@@ -70,7 +70,7 @@ const getUserGenerators = async (ctx) => {
 };
 
 const getGeneratorsByOwnerId = async (ownerId) => {
-  const generators = await GeneratorModel.findAll({
+  const generators = await Generator.findAll({
     where: {
       owner_id: ownerId,
     },

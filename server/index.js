@@ -1,5 +1,4 @@
 require("dotenv").config();
-require("./db/index");
 const Koa = require("koa");
 const bodyParser = require("koa-bodyparser");
 const Router = require("@koa/router");
