@@ -5,28 +5,25 @@ import MoonLoader from "react-spinners/MoonLoader";
 import { ButtonTheme } from "../../components/Button/types";
 import Input from "../../components/Input";
 import { SeedType } from "../../components/SearchBar/types";
-import { Generator, GeneratorSeed } from "../Dashboard/types";
+import { GeneratorSeed } from "../Dashboard/types";
 import SearchBar from "../../components/SearchBar";
 
 import style from "./style.module.scss";
 import { useEffect } from "react";
 import ApiClient from "../../api";
+import { LinkDataState, Params, ScheduleTypes, ScheduleDays } from "./types";
+import Select, { SelectOption } from "../../components/Select";
+import { capitalize } from "lodash";
 
-type GeneratorBuilderProps = {
-  setUserGenerators: any;
-};
-
-type LinkDataState = {
-  generator?: Generator;
-};
-
-type Params = {
-  generatorId?: string;
-};
-
-const GeneratorBuilder = (props: GeneratorBuilderProps) => {
+const GeneratorBuilder = () => {
   const [generatorSeeds, setGeneratorSeeds] = useState<GeneratorSeed[]>([]);
   const [generatorName, setGeneratorName] = useState<string>(``);
+  const [generatorFrequency, setGeneratorFrequency] = useState<ScheduleTypes>(
+    ScheduleTypes.NEVER
+  );
+  const [generatorDay, setGeneratorDay] = useState<ScheduleDays>(
+    ScheduleDays.SUNDAY
+  );
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [shouldRedirect, setShouldRedirect] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -74,6 +71,9 @@ const GeneratorBuilder = (props: GeneratorBuilderProps) => {
       {
         generatorSeeds,
         generatorName,
+        generatorFrequency,
+        generatorDay:
+          generatorFrequency === ScheduleTypes.WEEKLY ? generatorDay : null,
       },
       `Unable to create ${generatorName}`,
       `Created ${generatorName}`
@@ -94,6 +94,76 @@ const GeneratorBuilder = (props: GeneratorBuilderProps) => {
     });
   };
 
+  const frequencyOptions = (): SelectOption[] => {
+    return [
+      {
+        label: capitalize(ScheduleTypes.NEVER),
+        value: ScheduleTypes.NEVER,
+        isSelected: ScheduleTypes.NEVER === generatorFrequency,
+      },
+      {
+        label: capitalize(ScheduleTypes.DAILY),
+        value: ScheduleTypes.DAILY,
+        isSelected: ScheduleTypes.DAILY === generatorFrequency,
+      },
+      {
+        label: capitalize(ScheduleTypes.WEEKLY),
+        value: ScheduleTypes.WEEKLY,
+        isSelected: ScheduleTypes.WEEKLY === generatorFrequency,
+      },
+      {
+        label: capitalize(ScheduleTypes.BIWEEKLY),
+        value: ScheduleTypes.BIWEEKLY,
+        isSelected: ScheduleTypes.BIWEEKLY === generatorFrequency,
+      },
+      {
+        label: capitalize(ScheduleTypes.MONTHLY),
+        value: ScheduleTypes.MONTHLY,
+        isSelected: ScheduleTypes.MONTHLY === generatorFrequency,
+      },
+    ];
+  };
+
+  const dayOptions = (): SelectOption[] => {
+    return [
+      {
+        label: capitalize(ScheduleDays.SUNDAY),
+        value: ScheduleDays.SUNDAY,
+        isSelected: ScheduleDays.SUNDAY === generatorDay,
+      },
+      {
+        label: capitalize(ScheduleDays.MONDAY),
+        value: ScheduleDays.MONDAY,
+        isSelected: ScheduleDays.MONDAY === generatorDay,
+      },
+      {
+        label: capitalize(ScheduleDays.TUESDAY),
+        value: ScheduleDays.TUESDAY,
+        isSelected: ScheduleDays.TUESDAY === generatorDay,
+      },
+      {
+        label: capitalize(ScheduleDays.WEDNESDAY),
+        value: ScheduleDays.WEDNESDAY,
+        isSelected: ScheduleDays.WEDNESDAY === generatorDay,
+      },
+      {
+        label: capitalize(ScheduleDays.THURSDAY),
+        value: ScheduleDays.THURSDAY,
+        isSelected: ScheduleDays.THURSDAY === generatorDay,
+      },
+      {
+        label: capitalize(ScheduleDays.FRIDAY),
+        value: ScheduleDays.FRIDAY,
+        isSelected: ScheduleDays.FRIDAY === generatorDay,
+      },
+      {
+        label: capitalize(ScheduleDays.SATURDAY),
+        value: ScheduleDays.SATURDAY,
+        isSelected: ScheduleDays.SATURDAY === generatorDay,
+      },
+    ];
+  };
+
   if (shouldRedirect) {
     return <Redirect to="/dashboard" />;
   }
@@ -106,6 +176,13 @@ const GeneratorBuilder = (props: GeneratorBuilderProps) => {
         fontSize={32}
         placeholder="Generator Name"
       />
+      <Select
+        options={frequencyOptions()}
+        handleChange={setGeneratorFrequency}
+      />
+      {generatorFrequency === ScheduleTypes.WEEKLY && (
+        <Select options={dayOptions()} handleChange={setGeneratorDay} />
+      )}
       <SearchBar updateSeeds={updateSeeds} />
       {mapSeeds()}
       {isLoading ? (

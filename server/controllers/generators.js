@@ -1,5 +1,5 @@
 const fetch = require("node-fetch");
-const { Generator } = require("../models");
+const { Generator, User } = require("../models");
 const logger = require("../logger");
 
 const handleSearch = async (ctx) => {
@@ -20,11 +20,14 @@ const createGenerator = async (ctx) => {
   let error = null;
   try {
     const body = ctx.request.body;
-    const { generatorName, generatorSeeds } = body;
+    const { generatorName, generatorSeeds, generatorFrequency, generatorDay } =
+      body;
     await Generator.create({
       owner_id: user.id,
       name: generatorName,
       seeds: generatorSeeds,
+      schedule_frequency: generatorFrequency,
+      schedule_day: generatorDay,
     });
   } catch (e) {
     console.error(e);
@@ -39,7 +42,26 @@ const generatePlaylist = async (ctx) => {
   try {
     const generatorId = parseInt(ctx.params.id);
     const user = ctx.state.user;
-    const generator = await Generator.findByPk(generatorId);
+    const generator = await Generator.findOne({
+      where: {
+        id: generatorId,
+      },
+      include: [User],
+    });
+    if (user.id !== generator.User.id) {
+      throw new Error("Only owner can generate playlist");
+    }
+    await buildPlaylist(generator, user);
+    ctx.response.body = response;
+  } catch (err) {
+    console.log(err);
+    response.isError = true;
+    ctx.response.body = response;
+  }
+};
+
+const buildPlaylist = async (generator, user) => {
+  try {
     const recommendedTracks = await getRecommendedTracks(
       user.accessToken,
       generator.seeds
@@ -49,11 +71,9 @@ const generatePlaylist = async (ctx) => {
     });
     const playlist = await createPlaylist(user, generator.name);
     await addTracksToPlaylist(user.accessToken, playlist.id, trackUris);
-    ctx.response.body = response;
   } catch (err) {
     console.log(err);
-    response.isError = true;
-    ctx.response.body = response;
+    throw new Error(`Could not create playlist`);
   }
 };
 
@@ -159,4 +179,5 @@ module.exports = {
   createGenerator,
   generatePlaylist,
   getUserGenerators,
+  buildPlaylist,
 };

@@ -48,7 +48,8 @@
     "server": "nodemon server/index.js",
     "start-dev": "concurrently \"yarn server\" \"yarn start\"",
     "migrate": "npx sequelize-cli db:migrate",
-    "make-migration": "npx sequelize-cli migration:generate --name $1"
+    "make-migration": "npx sequelize-cli migration:generate --name $1",
+    "generate-playlists": "node server/crons/generatePlaylists.js"
   },
   "eslintConfig": {
     "extends": [
