@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Generator.User = Generator.belongsTo(models.User, {
+        foreignKey: "owner_id",
+      });
     }
   }
   Generator.init(
@@ -24,11 +27,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      schedule_frequency: {
+        type: DataTypes.STRING,
+      },
+      schedule_day: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,
       modelName: "Generator",
       tableName: "generators",
+      timestamps: false,
     }
   );
   return Generator;
