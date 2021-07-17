@@ -1,6 +1,6 @@
 const btoa = require("btoa");
 const fetch = require("node-fetch");
-const UserModel = require("../db/models/User");
+const { User } = require("../models");
 const spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
 const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 const spotifyCallbackUrl = process.env.SPOTIFY_CALLBACK_URL;
@@ -18,7 +18,7 @@ const GrantType = {
 const getUser = async (ctx) => {
   const userId = ctx.session?.userId;
   if (userId) {
-    const user = await UserModel.findOne({
+    const user = await User.findOne({
       where: {
         id: userId,
       },
@@ -102,14 +102,14 @@ const fetchTokens = async (grantType, grantValue) => {
 };
 
 const getOrCreateUser = async (spotifyId, displayName, email, refreshToken) => {
-  const user = await UserModel.findOne({
+  const user = await User.findOne({
     where: {
       spotify_id: spotifyId,
     },
   });
   if (!user) {
     // const encryptedToken = await encryptToken(refreshToken);
-    return await UserModel.create({
+    return await User.create({
       email,
       username: displayName,
       spotify_id: spotifyId,

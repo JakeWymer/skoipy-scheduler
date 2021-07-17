@@ -1,10 +1,10 @@
-const UserModel = require("./db/models/User");
+const { User } = require("./models");
 const { fetchTokens, GrantType } = require("./controllers/auth");
 
 const checkAuth = async (ctx, next) => {
   try {
     const userId = ctx.session.userId;
-    const user = await UserModel.findOne({
+    const user = await User.findOne({
       where: {
         id: userId,
       },
