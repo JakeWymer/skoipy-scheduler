@@ -23,7 +23,7 @@
     color: $skoip-navy;
 
     &:hover {
-      background-color: lighten($skoip-navy, 15);
+      background-color: darken(white, 5);
     }
   }
 

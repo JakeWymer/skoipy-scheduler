@@ -14,6 +14,8 @@ import ApiClient from "../../api";
 import { LinkDataState, Params, ScheduleTypes, ScheduleDays } from "./types";
 import Select, { SelectOption } from "../../components/Select";
 import { capitalize } from "lodash";
+import SpinnerOrComponent from "../../components/SpinnerOrComponent";
+import SelectedSeeds from "../../components/SelectedSeeds";
 
 const GeneratorBuilder = () => {
   const [generatorSeeds, setGeneratorSeeds] = useState<GeneratorSeed[]>([]);
@@ -168,6 +170,15 @@ const GeneratorBuilder = () => {
     return <Redirect to="/dashboard" />;
   }
 
+  const removeSeed = (seed: GeneratorSeed) => {
+    const seedIndex = generatorSeeds.findIndex(
+      (generatorSeed) => generatorSeed.id === seed.id
+    );
+    const seedsCopy = [...generatorSeeds];
+    seedsCopy.splice(seedIndex, 1);
+    setGeneratorSeeds(seedsCopy);
+  };
+
   return (
     <div className={style.wrapper}>
       <Input
@@ -176,26 +187,32 @@ const GeneratorBuilder = () => {
         fontSize={32}
         placeholder="Generator Name"
       />
-      <Select
-        options={frequencyOptions()}
-        handleChange={setGeneratorFrequency}
-      />
-      {generatorFrequency === ScheduleTypes.WEEKLY && (
-        <Select options={dayOptions()} handleChange={setGeneratorDay} />
-      )}
-      <SearchBar updateSeeds={updateSeeds} />
-      {mapSeeds()}
-      {isLoading ? (
-        <MoonLoader color="#b7b5e4" loading={isLoading} size={30} />
-      ) : (
+      <div className={style.scheduling_section}>
+        <Select
+          options={frequencyOptions()}
+          handleChange={setGeneratorFrequency}
+          label="Generation Frequency"
+        />
+        <Select
+          options={dayOptions()}
+          handleChange={setGeneratorDay}
+          label="Generation Day"
+          disabled={ScheduleTypes.WEEKLY !== generatorFrequency}
+        />
+      </div>
+      <div className={style.selection_section}>
+        <SearchBar updateSeeds={updateSeeds} />
+        <SelectedSeeds seeds={generatorSeeds} removeSeed={removeSeed} />
+      </div>
+      <div className={style.control_buttons}>
+        <Link to="/dashboard">
+          <Button text="Cancel" theme={ButtonTheme.SECONDARY} />
+        </Link>
         <Button
           text={isEditing ? "Save" : "Create"}
           clickHandler={createGenerator}
         />
-      )}
-      <Link to="/dashboard">
-        <Button text="Cancel" theme={ButtonTheme.SECONDARY} />
-      </Link>
+      </div>
     </div>
   );
 };

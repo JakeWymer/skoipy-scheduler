@@ -1,0 +1,17 @@
+@import "../../styles/colors.scss";
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  width: 50%;
+
+  .artists {
+    border-right: 1px solid $light-grey;
+    padding-right: 10px;
+  }
+
+  .tracks {
+    border-left: 1px solid $light-grey;
+    padding-left: 10px;
+  }
+}

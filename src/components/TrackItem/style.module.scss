@@ -1,0 +1,15 @@
+@import "../../styles/colors.scss";
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+
+  img {
+    width: 100px;
+  }
+
+  .track_info {
+    margin-right: 20px;
+  }
+}

@@ -1,3 +1,5 @@
+import "./style.scss";
+
 export type SelectOption = {
   value: string;
   label: string;
@@ -7,6 +9,8 @@ export type SelectOption = {
 type SelectProps = {
   options: SelectOption[];
   handleChange: any;
+  label: string;
+  disabled?: boolean;
 };
 
 const Select = (props: SelectProps) => {
@@ -20,7 +24,11 @@ const Select = (props: SelectProps) => {
 
   return (
     <div>
-      <select onChange={(ev) => props.handleChange(ev.target.value)}>
+      <div className={props.disabled ? "disabled-text" : ""}>{props.label}</div>
+      <select
+        onChange={(ev) => props.handleChange(ev.target.value)}
+        disabled={props.disabled}
+      >
         {options}
       </select>
     </div>

@@ -1,0 +1,15 @@
+.input {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  outline: none;
+  :-webkit-autofill {
+    background-color: inherit;
+  }
+}
+
+.input_wrapper {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
