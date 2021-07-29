@@ -4,6 +4,7 @@ import { Route, Redirect } from "react-router";
 import ApiClient, { BaseApiResponse } from "./api";
 import LoadingSpinner from "./components/LoadingSpinner";
 import { warningToast } from "./utils";
+import mixpanel from "mixpanel-browser";
 
 type AuthedRouteProps = {
   authedComponent: any;
@@ -34,6 +35,7 @@ const AuthedRoute = (props: AuthedRouteProps) => {
       const user = res.user;
       if (!!user) {
         setUser(user);
+        mixpanel.identify(user.id.toString());
       } else {
         warningToast("Please log in");
       }
