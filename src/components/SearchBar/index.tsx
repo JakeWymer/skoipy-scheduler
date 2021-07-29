@@ -2,9 +2,12 @@ import { useState } from "react";
 import _ from "lodash";
 import { SearchBarProps, SeedType, Artist, Track } from "./types";
 
-import "./style.scss";
+import styles from "./style.module.scss";
 import ApiClient, { BaseApiResponse } from "../../api";
 import SpinnerOrComponent from "../SpinnerOrComponent";
+import ArtistItem from "../ArtistItem";
+import TrackItem from "../TrackItem";
+import Input from "../Input";
 
 interface SearchResponse extends BaseApiResponse {
   artists: { items: Artist[] };
@@ -66,56 +69,34 @@ const SearchBar = (props: SearchBarProps) => {
     return results.slice(0, 5);
   };
 
-  const artistItem = (artist: any, key: number) => {
-    const artistName = artist.name;
-    let artistImg = `https://i.stack.imgur.com/y9DpT.jpg`;
-    if (artist.images.length) {
-      artistImg = artist.images[1].url;
-    }
-    return (
-      <div key={key} className="search-result">
-        <img src={artistImg} />
-        {artistName}
-        <button onClick={() => props.updateSeeds(artist, SeedType.ARTIST)}>
-          Add
-        </button>
-      </div>
-    );
-  };
-
-  const trackItem = (track: any, key: number) => {
-    const artistName = track.artists[0].name;
-    const trackName = track.name;
-    const albumImg = track.album.images[1].url;
-    const albumName = track.album.name;
-    return (
-      <div key={key} className="search-result">
-        <img src={albumImg} />
-        <div className="result-info">
-          <div>{trackName}</div>
-          <div className="sub-header">
-            {albumName} | {artistName}
-          </div>
-        </div>
-        <button onClick={() => props.updateSeeds(track, SeedType.TRACK)}>
-          Add
-        </button>
-      </div>
-    );
-  };
-
   const mapResults = () => {
     return topResults.map((result: any, i) => {
       if (result.type === SeedType.ARTIST) {
-        return artistItem(result, i);
+        return (
+          <ArtistItem
+            artist={result}
+            key={i}
+            clickHandler={props.updateSeeds}
+          />
+        );
       }
-      return trackItem(result, i);
+      return (
+        <TrackItem track={result} key={i} clickHandler={props.updateSeeds} />
+      );
     });
   };
 
   return (
-    <div className="search-wrapper">
-      <input onChange={handleChange} value={term} id="search-bar" />
+    <div className={styles.search_wrapper}>
+      <div className={styles.search_bar}>
+        <Input
+          handleChange={handleChange}
+          value={term}
+          label="Search Spotify"
+          fontSize={18}
+          placeholder="Search for a song or artist"
+        />
+      </div>
       <SpinnerOrComponent
         isLoading={isLoading}
         componentRenderer={mapResults}

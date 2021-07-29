@@ -1,0 +1,26 @@
+@import "../../styles/colors.scss";
+
+.search_wrapper {
+  height: 100%;
+  width: 50%;
+  overflow: auto;
+
+  .search_result {
+    align-items: center;
+    display: flex;
+
+    img {
+      width: 80px;
+    }
+
+    .sub_header {
+      color: $light-grey;
+    }
+  }
+
+  .search_bar {
+    position: sticky;
+    top: 0px;
+    background-color: white;
+  }
+}
