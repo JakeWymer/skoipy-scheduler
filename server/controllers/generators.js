@@ -5,7 +5,7 @@ const { mp, EVENTS, PROPERTIES } = require("../tracking");
 
 const handleSearch = async (ctx) => {
   const { accessToken } = ctx.state.user;
-  const searchTerm = ctx.request.query.term;
+  const searchTerm = ctx.request.query?.term;
   const searchUrl = `https://api.spotify.com/v1/search?q=${searchTerm}&type=artist,track`;
   const rawResponse = await fetch(searchUrl, {
     headers: {

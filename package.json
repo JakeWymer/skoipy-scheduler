@@ -53,7 +53,7 @@
     "start-dev": "concurrently \"yarn server\" \"yarn start\"",
     "migrate": "npx sequelize-cli db:migrate",
     "make-migration": "npx sequelize-cli migration:generate --name $1",
-    "generate-playlists": "node server/crons/generatePlaylists.js"
+    "generate-playlists": "/usr/local/bin/node server/crons/generatePlaylists.js"
   },
   "eslintConfig": {
     "extends": [
