@@ -5,12 +5,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import mixpanel from "mixpanel-browser";
 
-let mpProjectToken = process.env.REACT_APP_MP_PROJECT_TOKEN_DEV;
+let mpProjectToken = process.env.REACT_APP_MP_PROJECT_TOKEN;
 const isProdEnv = process.env.NODE_ENV === `production`;
-
-if (isProdEnv) {
-  mpProjectToken = process.env.REACT_APP_MP_PROJECT_TOKEN_PROD;
-}
 
 mixpanel.init(mpProjectToken, { debug: !isProdEnv });
 

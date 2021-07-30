@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import mixpanel from "mixpanel-browser";
 import ApiClient, { BaseApiResponse } from "../../api";
 import { Generator } from "../../pages/Dashboard/types";
 import Button from "../Button";
 import { ButtonTheme } from "../Button/types";
 import SpinnerOrComponent from "../SpinnerOrComponent";
 import EditIcon from "./assets/edit.svg";
+import { TrackingEvents, TrackingProperties } from "../../tracking";
 import style from "./style.module.scss";
 
 export type GeneratorCardProps = {
@@ -16,6 +18,9 @@ const GeneratorCard = (props: GeneratorCardProps) => {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
   const generatePlaylist = async () => {
+    mixpanel.track(TrackingEvents.CLICKED_GENERATE_PLAYLIST_BUTTON, {
+      [TrackingProperties.GENERATOR_ID]: props.generator.id,
+    });
     setIsGenerating(true);
     await ApiClient.post<BaseApiResponse>(
       `/generators/${props.generator.id}/generate`,

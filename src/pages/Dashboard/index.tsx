@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Button from "../../components/Button";
-import Modal from "react-modal";
 import { Generator, GeneratorResponse } from "./types";
 import GeneratorCard from "../../components/GeneratorCard";
 import styles from "./style.module.scss";
@@ -10,8 +9,6 @@ import SpinnerOrComponent from "../../components/SpinnerOrComponent";
 import ApiClient from "../../api";
 
 const Dashboard = (props: AuthProps) => {
-  Modal.setAppElement("#root");
-  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userGenerators, setUserGenerators] = useState<Generator[]>([]);
 
@@ -23,10 +20,6 @@ const Dashboard = (props: AuthProps) => {
       }
     );
   }, []);
-
-  const handleModal = () => {
-    setModalIsOpen(!modalIsOpen);
-  };
 
   const mapGenerators = () => {
     return userGenerators.map((generator, i) => {
@@ -50,7 +43,7 @@ const Dashboard = (props: AuthProps) => {
         <h1>Heyoo, {props.user.username}!</h1>
       </div>
       <Link to="/generator/new">
-        <Button text="Schedule New Generator" clickHandler={handleModal} />
+        <Button text="Schedule New Generator" />
       </Link>
       <hr />
       <SpinnerOrComponent

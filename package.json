@@ -26,6 +26,7 @@
     "koa-route": "^3.2.0",
     "koa-session": "^6.2.0",
     "lodash": "^4.17.21",
+    "mixpanel": "^0.13.0",
     "mixpanel-browser": "^2.41.0",
     "node-fetch": "^2.6.1",
     "node-sass": "^6.0.0",
