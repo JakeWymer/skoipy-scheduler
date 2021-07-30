@@ -1,6 +1,7 @@
 const fetch = require("node-fetch");
 const { Generator, User } = require("../models");
 const logger = require("../logger");
+const { mp, EVENTS, PROPERTIES } = require("../tracking");
 
 const handleSearch = async (ctx) => {
   const { accessToken } = ctx.state.user;
@@ -29,9 +30,17 @@ const createGenerator = async (ctx) => {
       schedule_frequency: generatorFrequency,
       schedule_day: generatorDay,
     });
+    mp.track(EVENTS.GENERATOR_CREATED, {
+      [PROPERTIES.USER_ID]: user.id,
+      [PROPERTIES.GENERATOR_NAME]: generatorName,
+    });
   } catch (e) {
     console.error(e);
     error = `Failed to create generator`;
+    mp.track(EVENTS.GENERATOR_CREATION_FAILED, {
+      [PROPERTIES.USER_ID]: user.id,
+      [PROPERTIES.GENERATOR_NAME]: generatorName,
+    });
   }
   const generators = await getGeneratorsByOwnerId(user.id);
   ctx.response.body = { generators, error };
@@ -53,8 +62,15 @@ const generatePlaylist = async (ctx) => {
     }
     await buildPlaylist(generator, user);
     ctx.response.body = response;
+    mp.track(EVENTS.PLAYLIST_GENERATED, {
+      [PROPERTIES.USER_ID]: user.id,
+      [PROPERTIES.GENERATOR_ID]: generatorId,
+    });
   } catch (err) {
     console.log(err);
+    mp.track(EVENTS.PLAYLIST_GENERATION_FAILED, {
+      [PROPERTIES.GENERATOR_ID]: generatorId,
+    });
     response.isError = true;
     ctx.response.body = response;
   }
