@@ -3,15 +3,24 @@ const Koa = require("koa");
 const bodyParser = require("koa-bodyparser");
 const Router = require("@koa/router");
 const session = require("koa-session");
+const serve = require("koa-static");
+const fs = require("fs");
 const authController = require("./controllers/auth");
 const generatorController = require("./controllers/generators");
 const middleware = require("./middleware");
 
 const app = new Koa();
+app.keys = [process.env.SESSION_KEYS];
+
+const buildFolderPath = `${__dirname}/../build`;
+
+if (process.env.NODE_ENV === `production`) {
+  app.use(serve(buildFolderPath));
+}
+
 const router = new Router();
 const PORT = 8001;
 
-app.keys = ["some secret hurr"];
 router.use(session(app));
 
 app.use(bodyParser());
@@ -44,6 +53,11 @@ router.post(
   middleware.checkAuth,
   generatorController.generatePlaylist
 );
+
+app.use((ctx, next) => {
+  ctx.type = "html";
+  ctx.body = fs.readFileSync(`${buildFolderPath}/index.html`);
+});
 
 app.listen(PORT);
 console.log(`listening on port ${PORT}`);
