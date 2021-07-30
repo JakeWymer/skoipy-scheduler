@@ -30,7 +30,7 @@ const days = [
     let shouldGenerate;
     switch (generator.schedule_frequency) {
       case SCHEDULE_TYPES.DAILY:
-        shouldGenerate === true;
+        shouldGenerate = true;
         break;
       case SCHEDULE_TYPES.WEEKLY:
         shouldGenerate = generator.schedule_day === currentDay;
@@ -47,7 +47,9 @@ const days = [
     return shouldGenerate;
   });
 
-  logger.success(`${generators.length} queued up for playlist creation.`);
+  logger.success(
+    `${generators.length} generators queued up for playlist creation.`
+  );
 
   Promise.all(
     generators.map(async (generator) => {
