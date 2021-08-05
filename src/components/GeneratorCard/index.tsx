@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import mixpanel from "mixpanel-browser";
+import Swal from "sweetalert2";
 import ApiClient, { BaseApiResponse } from "../../api";
-import { Generator } from "../../pages/Dashboard/types";
+import { Generator, GeneratorResponse } from "../../pages/Dashboard/types";
 import Button from "../Button";
 import { ButtonTheme } from "../Button/types";
 import SpinnerOrComponent from "../SpinnerOrComponent";
 import EditIcon from "./assets/edit.svg";
+import DeleteIcon from "./assets/delete-icon.svg";
 import { TrackingEvents, TrackingProperties } from "../../tracking";
 import style from "./style.module.scss";
 
 export type GeneratorCardProps = {
   generator: Generator;
+  setUserGenerators: any;
 };
 
 const GeneratorCard = (props: GeneratorCardProps) => {
@@ -40,6 +43,28 @@ const GeneratorCard = (props: GeneratorCardProps) => {
       />
     );
   };
+
+  const deleteGenerator = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#db2b39",
+      cancelButtonColor: "#8B939C",
+      confirmButtonText: "Delete",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const data = await ApiClient.apiDelete<GeneratorResponse>(
+          `/generators/${props.generator.id}`,
+          `Could not delete ${props.generator.name}`,
+          `Deleted ${props.generator.name}`
+        );
+        props.setUserGenerators(data.generators);
+      }
+    });
+  };
+
   return (
     <div className={style.generator_card_wrapper}>
       <Link
@@ -50,6 +75,11 @@ const GeneratorCard = (props: GeneratorCardProps) => {
       >
         <img src={EditIcon} className={style.edit_icon} />
       </Link>
+      <img
+        src={DeleteIcon}
+        className={style.delete_icon}
+        onClick={deleteGenerator}
+      />
       <h3 className={style.generator_card_title}>{props.generator.name}</h3>
       <div className={style.generator_card_buttons}>
         <SpinnerOrComponent

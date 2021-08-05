@@ -190,7 +190,7 @@ const getNextPlaylistName = async (accessToken, generatorName) => {
   return `${generatorName} ${nextPlaylistNumber}`;
 };
 
-const editPlaylist = async (ctx) => {
+const editGenerator = async (ctx) => {
   const generatorId = parseInt(ctx.params.id);
   const generator = await Generator.findOne({
     where: {
@@ -215,11 +215,32 @@ const editPlaylist = async (ctx) => {
   return (ctx.response.body = { isError: false });
 };
 
+const deleteGenerator = async (ctx) => {
+  const generatorId = parseInt(ctx.params.id);
+  const generator = await Generator.findOne({
+    where: {
+      id: generatorId,
+    },
+  });
+  if (generator.owner_id !== ctx.state.user.id) {
+    return (ctx.response.body = { isError: true });
+  }
+  try {
+    await generator.destroy();
+  } catch {
+    return (ctx.response.body = { isError: true });
+  }
+  const userGenerators = await getGeneratorsByOwnerId(ctx.state.user.id);
+
+  return (ctx.response.body = { isError: false, generators: userGenerators });
+};
+
 module.exports = {
   handleSearch,
   createGenerator,
   generatePlaylist,
   getUserGenerators,
   buildPlaylist,
-  editPlaylist,
+  editGenerator,
+  deleteGenerator,
 };

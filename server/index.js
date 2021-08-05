@@ -56,7 +56,12 @@ router.post(
 router.put(
   `/generators/:id`,
   middleware.checkAuth,
-  generatorController.editPlaylist
+  generatorController.editGenerator
+);
+router.delete(
+  `/generators/:id`,
+  middleware.checkAuth,
+  generatorController.deleteGenerator
 );
 
 app.use((ctx, next) => {
