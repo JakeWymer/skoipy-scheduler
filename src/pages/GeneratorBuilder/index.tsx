@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Button from "../../components/Button";
 import { Link, Redirect, useLocation, useParams } from "react-router-dom";
-import MoonLoader from "react-spinners/MoonLoader";
 import { ButtonTheme } from "../../components/Button/types";
 import Input from "../../components/Input";
 import { SeedType } from "../../components/SearchBar/types";
@@ -14,7 +13,6 @@ import ApiClient from "../../api";
 import { LinkDataState, Params, ScheduleTypes, ScheduleDays } from "./types";
 import Select, { SelectOption } from "../../components/Select";
 import { capitalize } from "lodash";
-import SpinnerOrComponent from "../../components/SpinnerOrComponent";
 import SelectedSeeds from "../../components/SelectedSeeds";
 
 const GeneratorBuilder = () => {
@@ -38,6 +36,8 @@ const GeneratorBuilder = () => {
       if (state.generator) {
         setGeneratorName(state.generator.name);
         setGeneratorSeeds(state.generator.seeds);
+        setGeneratorFrequency(state.generator.schedule_frequency);
+        setGeneratorDay(state.generator.schedule_day);
         setIsEditing(true);
       } else {
         // Try to fetch generator here. This might happen if someone navigates directly to this page
@@ -66,20 +66,35 @@ const GeneratorBuilder = () => {
     setGeneratorSeeds([...generatorSeeds, newSeed]);
   };
 
-  const createGenerator = async () => {
+  const createOrUpdateGenerator = async () => {
     setIsLoading(true);
-    await ApiClient.post(
-      "/generators",
-      {
-        generatorSeeds,
-        generatorName,
-        generatorFrequency,
-        generatorDay:
-          generatorFrequency === ScheduleTypes.WEEKLY ? generatorDay : null,
-      },
-      `Unable to create ${generatorName}`,
-      `Created ${generatorName}`
-    );
+    if (isEditing) {
+      await ApiClient.put(
+        `/generators/${params.generatorId}`,
+        {
+          generatorSeeds,
+          generatorName,
+          generatorFrequency,
+          generatorDay:
+            generatorFrequency === ScheduleTypes.WEEKLY ? generatorDay : null,
+        },
+        `Unable to update ${generatorName}`,
+        `Updated ${generatorName}`
+      );
+    } else {
+      await ApiClient.post(
+        "/generators",
+        {
+          generatorSeeds,
+          generatorName,
+          generatorFrequency,
+          generatorDay:
+            generatorFrequency === ScheduleTypes.WEEKLY ? generatorDay : null,
+        },
+        `Unable to create ${generatorName}`,
+        `Created ${generatorName}`
+      );
+    }
     setIsLoading(false);
     setGeneratorSeeds([]);
     setGeneratorName(``);
@@ -210,7 +225,7 @@ const GeneratorBuilder = () => {
         </Link>
         <Button
           text={isEditing ? "Save" : "Create"}
-          clickHandler={createGenerator}
+          clickHandler={createOrUpdateGenerator}
         />
       </div>
     </div>

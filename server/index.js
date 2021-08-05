@@ -53,6 +53,11 @@ router.post(
   middleware.checkAuth,
   generatorController.generatePlaylist
 );
+router.put(
+  `/generators/:id`,
+  middleware.checkAuth,
+  generatorController.editPlaylist
+);
 
 app.use((ctx, next) => {
   ctx.type = "html";
