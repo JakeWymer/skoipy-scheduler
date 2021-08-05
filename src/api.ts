@@ -56,9 +56,27 @@ const post = async <T extends BaseApiResponse>(
   }
 };
 
+const put = async <T extends BaseApiResponse>(
+  url: string,
+  body: any,
+  toastErrorMessage?: string,
+  toastSuccessMessage?: string
+): Promise<T> => {
+  try {
+    const response: AxiosResponse<T> = await axios.put(url, body);
+    return _parseResponse(response, toastErrorMessage, toastSuccessMessage);
+  } catch (err) {
+    if (toastErrorMessage) {
+      errorToast(toastErrorMessage);
+    }
+    return { isError: true } as T;
+  }
+};
+
 const ApiClient = {
   get,
   post,
+  put,
 };
 
 export default ApiClient;

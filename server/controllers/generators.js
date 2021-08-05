@@ -190,10 +190,36 @@ const getNextPlaylistName = async (accessToken, generatorName) => {
   return `${generatorName} ${nextPlaylistNumber}`;
 };
 
+const editPlaylist = async (ctx) => {
+  const generatorId = parseInt(ctx.params.id);
+  const generator = await Generator.findOne({
+    where: {
+      id: generatorId,
+    },
+  });
+  if (generator.owner_id !== ctx.state.user.id) {
+    return (ctx.response.body = { isError: true });
+  }
+  const body = ctx.request.body;
+  generator.name = body.generatorName;
+  generator.seeds = body.generatorSeeds;
+  generator.schedule_frequency = body.generatorFrequency;
+  generator.schedule_day = body.generatorDay;
+
+  try {
+    await generator.save();
+  } catch {
+    return (ctx.response.body = { isError: true });
+  }
+
+  return (ctx.response.body = { isError: false });
+};
+
 module.exports = {
   handleSearch,
   createGenerator,
   generatePlaylist,
   getUserGenerators,
   buildPlaylist,
+  editPlaylist,
 };
