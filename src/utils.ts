@@ -1,40 +1,43 @@
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
+import Swal from "sweetalert2";
+
+enum ToastIcon {
+  INFO = `info`,
+  SUCCESS = `success`,
+  ERROR = `error`,
+  WARNING = `warning`,
+  QUESTION = `question`,
+}
+
+const getToast = (titleText: string, icon: ToastIcon) => {
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "bottom-start",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    icon,
+    titleText,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
+  return Toast;
+};
 
 export const errorToast = (message: string) => {
-  return toast.error(message, {
-    position: "bottom-left",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
+  const toast = getToast(message, ToastIcon.ERROR);
+  toast.fire();
 };
 
 export const warningToast = (message: string) => {
-  return toast.warning(message, {
-    position: "bottom-left",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
+  const toast = getToast(message, ToastIcon.WARNING);
+  toast.fire();
 };
 
 export const successToast = (message: string) => {
-  return toast.success(message, {
-    position: "bottom-left",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
+  const toast = getToast(message, ToastIcon.SUCCESS);
+  toast.fire();
 };
 
 export const capitalized = (str: string) => {
