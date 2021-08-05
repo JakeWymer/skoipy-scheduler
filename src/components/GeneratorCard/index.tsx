@@ -60,7 +60,9 @@ const GeneratorCard = (props: GeneratorCardProps) => {
           `Could not delete ${props.generator.name}`,
           `Deleted ${props.generator.name}`
         );
-        props.setUserGenerators(data.generators);
+        if (!data.isError) {
+          props.setUserGenerators(data.generators);
+        }
       }
     });
   };

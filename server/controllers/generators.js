@@ -232,11 +232,12 @@ const deleteGenerator = async (ctx) => {
   try {
     await generator.destroy();
     mp.track(EVENTS.GENERATOR_DELETED, {
-      [PROPERTIES.USER_ID]: user.id,
+      [PROPERTIES.USER_ID]: ctx.state.user.id,
       [PROPERTIES.GENERATOR_ID]: generatorId,
-      [PROPERTIES.DISTINCT_ID]: user.id,
+      [PROPERTIES.DISTINCT_ID]: ctx.state.user.id,
     });
-  } catch {
+  } catch (err) {
+    console.log(err);
     return (ctx.response.body = { isError: true });
   }
   const userGenerators = await getGeneratorsByOwnerId(ctx.state.user.id);
