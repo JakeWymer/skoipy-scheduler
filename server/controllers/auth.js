@@ -119,6 +119,7 @@ const getOrCreateUser = async (spotifyId, displayName, email, refreshToken) => {
     });
     mp.track(EVENTS.SIGN_UP, {
       [PROPERTIES.USER_ID]: user.id,
+      [PROPERTIES.DISTINCT_ID]: user.id,
     });
   }
   return user;
