@@ -33,6 +33,7 @@ const createGenerator = async (ctx) => {
     mp.track(EVENTS.GENERATOR_CREATED, {
       [PROPERTIES.USER_ID]: user.id,
       [PROPERTIES.GENERATOR_NAME]: generatorName,
+      [PROPERTIES.DISTINCT_ID]: user.id,
     });
   } catch (e) {
     console.error(e);
@@ -40,6 +41,7 @@ const createGenerator = async (ctx) => {
     mp.track(EVENTS.GENERATOR_CREATION_FAILED, {
       [PROPERTIES.USER_ID]: user.id,
       [PROPERTIES.GENERATOR_NAME]: generatorName,
+      [PROPERTIES.DISTINCT_ID]: user.id,
     });
   }
   const generators = await getGeneratorsByOwnerId(user.id);
@@ -65,11 +67,13 @@ const generatePlaylist = async (ctx) => {
     mp.track(EVENTS.PLAYLIST_GENERATED, {
       [PROPERTIES.USER_ID]: user.id,
       [PROPERTIES.GENERATOR_ID]: generatorId,
+      [PROPERTIES.DISTINCT_ID]: user.id,
     });
   } catch (err) {
     console.log(err);
     mp.track(EVENTS.PLAYLIST_GENERATION_FAILED, {
       [PROPERTIES.GENERATOR_ID]: generatorId,
+      [PROPERTIES.DISTINCT_ID]: user.id,
     });
     response.isError = true;
     ctx.response.body = response;
@@ -227,6 +231,11 @@ const deleteGenerator = async (ctx) => {
   }
   try {
     await generator.destroy();
+    mp.track(EVENTS.GENERATOR_DELETED, {
+      [PROPERTIES.USER_ID]: user.id,
+      [PROPERTIES.GENERATOR_ID]: generatorId,
+      [PROPERTIES.DISTINCT_ID]: user.id,
+    });
   } catch {
     return (ctx.response.body = { isError: true });
   }
