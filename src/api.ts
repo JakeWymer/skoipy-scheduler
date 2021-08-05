@@ -73,10 +73,27 @@ const put = async <T extends BaseApiResponse>(
   }
 };
 
+const apiDelete = async <T extends BaseApiResponse>(
+  url: string,
+  toastErrorMessage?: string,
+  toastSuccessMessage?: string
+): Promise<T> => {
+  try {
+    const response: AxiosResponse<T> = await axios.delete(url);
+    return _parseResponse(response, toastErrorMessage, toastSuccessMessage);
+  } catch (err) {
+    if (toastErrorMessage) {
+      errorToast(toastErrorMessage);
+    }
+    return { isError: true } as T;
+  }
+};
+
 const ApiClient = {
   get,
   post,
   put,
+  apiDelete,
 };
 
 export default ApiClient;

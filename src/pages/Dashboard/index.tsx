@@ -23,7 +23,13 @@ const Dashboard = (props: AuthProps) => {
 
   const mapGenerators = () => {
     return userGenerators.map((generator, i) => {
-      return <GeneratorCard key={i} generator={generator} />;
+      return (
+        <GeneratorCard
+          key={i}
+          generator={generator}
+          setUserGenerators={setUserGenerators}
+        />
+      );
     });
   };
 
