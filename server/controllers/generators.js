@@ -33,6 +33,7 @@ const createGenerator = async (ctx) => {
       generatorDay,
       optInText,
       phoneNumber,
+      overwriteExisting,
     } = body;
     await Generator.create({
       owner_id: user.id,
@@ -42,6 +43,7 @@ const createGenerator = async (ctx) => {
       schedule_day: generatorDay,
       opt_in_text: optInText,
       phone_number: phoneNumber,
+      overwrite_existing: overwriteExisting,
     });
     mp.track(EVENTS.GENERATOR_CREATED, {
       [PROPERTIES.USER_ID]: user.id,
@@ -102,8 +104,8 @@ const buildPlaylist = async (generator, user) => {
     const trackUris = recommendedTracks.map((track) => {
       return track.uri;
     });
-    const playlist = await createPlaylist(user, generator.name);
-    await addTracksToPlaylist(user.accessToken, playlist.id, trackUris);
+    const playlist = await createPlaylist(user, generator);
+    await addTracksToPlaylist(user.accessToken, playlist, trackUris);
     if (generator.opt_in_text) {
       twilio.messages
         .create({
@@ -167,9 +169,33 @@ const getRecommendedTracks = async (accessToken, seeds) => {
   return recommendationRes.tracks;
 };
 
-const createPlaylist = async (user, name) => {
+const getExistingPlaylist = async (user, generator) => {
   const playlistUrl = `https://api.spotify.com/v1/users/${user.spotify_id}/playlists`;
-  const playlistName = await getNextPlaylistName(user.accessToken, name);
+  const rawResponse = await fetch(playlistUrl, {
+    headers: {
+      Authorization: `Bearer ${user.accessToken}`,
+      "Content-Type": `application/json`,
+    },
+    method: "GET",
+  });
+  const playlists = await rawResponse.json();
+  return playlists.items.filter((playlist) => {
+    return playlist.name === generator.name;
+  });
+};
+
+const createPlaylist = async (user, generator) => {
+  const playlistUrl = `https://api.spotify.com/v1/users/${user.spotify_id}/playlists`;
+  let playlistName = generator.name;
+  if (generator.overwrite_existing) {
+    const existingPlaylist = await getExistingPlaylist(user, generator);
+    if (existingPlaylist.length) {
+      return existingPlaylist[0];
+    }
+  } else {
+    playlistName = await getNextPlaylistName(user.accessToken, generator.name);
+  }
+
   const rawResponse = await fetch(playlistUrl, {
     headers: {
       Authorization: `Bearer ${user.accessToken}`,
@@ -181,15 +207,15 @@ const createPlaylist = async (user, name) => {
   return await rawResponse.json();
 };
 
-const addTracksToPlaylist = async (accessToken, playlistId, trackUris) => {
-  const addTracksUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?uris=${trackUris.join(
-    `,`
-  )}`;
+const addTracksToPlaylist = async (accessToken, playlist, trackUris) => {
+  const addTracksUrl = `https://api.spotify.com/v1/playlists/${
+    playlist.id
+  }/tracks?uris=${trackUris.join(`,`)}`;
   await fetch(addTracksUrl, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-    method: "POST",
+    method: playlist.tracks.total ? "PUT" : "POST",
   });
 };
 
@@ -234,6 +260,7 @@ const editGenerator = async (ctx) => {
   generator.schedule_day = body.generatorDay;
   generator.opt_in_text = body.optInText;
   generator.phone_number = body.phoneNumber;
+  generator.overwrite_existing = body.overwriteExisting;
 
   try {
     await generator.save();

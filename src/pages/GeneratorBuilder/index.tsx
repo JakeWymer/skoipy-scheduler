@@ -33,6 +33,7 @@ const GeneratorBuilder = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [optInText, setOptInText] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<string>(``);
+  const [overwriteExisting, setOverwriteExisting] = useState<boolean>(false);
 
   const { state }: { state: LinkDataState } = useLocation();
   const params: Params = useParams();
@@ -47,6 +48,7 @@ const GeneratorBuilder = () => {
         setOptInText(state.generator.opt_in_text);
         setPhoneNumber(state.generator.phone_number);
         setIsEditing(true);
+        setOverwriteExisting(state.generator.overwrite_existing);
       } else {
         // Try to fetch generator here. This might happen if someone navigates directly to this page
       }
@@ -75,6 +77,7 @@ const GeneratorBuilder = () => {
             generatorFrequency === ScheduleTypes.WEEKLY ? generatorDay : null,
           optInText,
           phoneNumber,
+          overwriteExisting,
         },
         `Unable to update ${generatorName}`,
         `Updated ${generatorName}`
@@ -90,6 +93,7 @@ const GeneratorBuilder = () => {
             generatorFrequency === ScheduleTypes.WEEKLY ? generatorDay : null,
           optInText,
           phoneNumber,
+          overwriteExisting,
         },
         `Unable to create ${generatorName}`,
         `Created ${generatorName}`
@@ -210,7 +214,9 @@ const GeneratorBuilder = () => {
   const handleOptInText = (ev: any) => {
     setOptInText(ev.target.checked);
   };
-
+  const handleOverwriteExisting = (ev: any) => {
+    setOverwriteExisting(ev.target.checked);
+  };
   const handlePhoneNumber = (ev: any) => {
     setPhoneNumber(ev.target.value);
   };
@@ -243,6 +249,14 @@ const GeneratorBuilder = () => {
         checked={optInText}
         onChange={handleOptInText}
         name="opt-in"
+      ></input>
+      <label htmlFor="overwrite-existing">Overwrite existing playlist</label>
+      <br></br>
+      <input
+        type="checkbox"
+        checked={overwriteExisting}
+        onChange={handleOverwriteExisting}
+        name="overwrite-existing"
       ></input>
       <Input
         placeholder="Phone Number"

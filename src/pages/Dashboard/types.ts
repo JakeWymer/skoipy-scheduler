@@ -19,6 +19,7 @@ export type Generator = {
   schedule_day: ScheduleDays;
   opt_in_text: boolean;
   phone_number: string;
+  overwrite_existing: boolean;
 };
 
 export interface GeneratorResponse extends BaseApiResponse {
