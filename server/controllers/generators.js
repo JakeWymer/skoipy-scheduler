@@ -1,4 +1,9 @@
+require("dotenv").config();
 const fetch = require("node-fetch");
+const twilio = require("twilio")(
+  process.env.TWILIO_ACCOUNT_ID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 const { Generator, User } = require("../models");
 const logger = require("../logger");
 const { mp, EVENTS, PROPERTIES } = require("../tracking");
@@ -21,14 +26,22 @@ const createGenerator = async (ctx) => {
   let error = null;
   try {
     const body = ctx.request.body;
-    const { generatorName, generatorSeeds, generatorFrequency, generatorDay } =
-      body;
+    const {
+      generatorName,
+      generatorSeeds,
+      generatorFrequency,
+      generatorDay,
+      optInText,
+      phoneNumber,
+    } = body;
     await Generator.create({
       owner_id: user.id,
       name: generatorName,
       seeds: generatorSeeds,
       schedule_frequency: generatorFrequency,
       schedule_day: generatorDay,
+      opt_in_text: optInText,
+      phone_number: phoneNumber,
     });
     mp.track(EVENTS.GENERATOR_CREATED, {
       [PROPERTIES.USER_ID]: user.id,
@@ -91,6 +104,16 @@ const buildPlaylist = async (generator, user) => {
     });
     const playlist = await createPlaylist(user, generator.name);
     await addTracksToPlaylist(user.accessToken, playlist.id, trackUris);
+    if (generator.opt_in_text) {
+      twilio.messages
+        .create({
+          body: `Your Skoipy playlist ${playlist.name} has been generated. Check it out here: ${playlist.external_urls.spotify}`,
+          messagingServiceSid: process.env.TWILIO_SERVICE_ID,
+          to: generator.phone_number,
+        })
+        .then((message) => console.log(message.sid))
+        .done();
+    }
   } catch (err) {
     console.log(err);
     throw new Error(`Could not create playlist`);
@@ -209,6 +232,8 @@ const editGenerator = async (ctx) => {
   generator.seeds = body.generatorSeeds;
   generator.schedule_frequency = body.generatorFrequency;
   generator.schedule_day = body.generatorDay;
+  generator.opt_in_text = body.optInText;
+  generator.phone_number = body.phoneNumber;
 
   try {
     await generator.save();

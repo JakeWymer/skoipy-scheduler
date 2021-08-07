@@ -7,6 +7,7 @@ export type InputProps = {
   fontSize?: number;
   placeholder?: string;
   label?: string;
+  disabled?: boolean;
 };
 
 const Input = (props: InputProps) => {
@@ -35,6 +36,7 @@ const Input = (props: InputProps) => {
         value={props.value}
         onChange={props.handleChange}
         placeholder={props.placeholder ? props.placeholder : ``}
+        disabled={props.disabled}
       />
     </div>
   );
