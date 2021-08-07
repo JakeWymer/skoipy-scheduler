@@ -10,24 +10,15 @@ type TrackItemProps = {
 };
 
 const TrackItem = (props: TrackItemProps) => {
-  const { isAdded, track, key, clickHandler } = props;
-  let artistName;
-  let trackName;
-  let albumImg;
-  let albumName;
-  if (isAdded) {
-    artistName = track.artist;
-    trackName = track.name;
-    albumImg = track.image;
-    albumName = track.album;
-  } else {
-    artistName = track.artists[0].name;
-    trackName = track.name;
-    albumImg = track.album.images[1].url;
-    albumName = track.album.name;
-  }
+  const { isAdded, track, clickHandler } = props;
+
+  const artistName = track.artist;
+  const trackName = track.name;
+  const albumImg = track.image;
+  const albumName = track.album;
+
   return (
-    <div key={key} className={styles.wrapper}>
+    <div className={styles.wrapper}>
       <img src={albumImg} />
       <div className={styles.track_info}>
         <div>{trackName}</div>

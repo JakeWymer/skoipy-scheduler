@@ -8,6 +8,8 @@ import SpinnerOrComponent from "../SpinnerOrComponent";
 import ArtistItem from "../ArtistItem";
 import TrackItem from "../TrackItem";
 import Input from "../Input";
+import { useEffect } from "react";
+import { GeneratorSeed } from "../../pages/Dashboard/types";
 
 interface SearchResponse extends BaseApiResponse {
   artists: { items: Artist[] };
@@ -18,6 +20,44 @@ const SearchBar = (props: SearchBarProps) => {
   const [term, setTerm] = useState(``);
   const [topResults, setTopResults] = useState<(Artist | Track)[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [selectedSeeds, setSelectedSeeds] = useState<GeneratorSeed[]>([]);
+
+  useEffect(() => {
+    setSelectedSeeds(props.selectedSeeds);
+  }, []);
+
+  const addOrRemoveSeed = (seed: any, type: SeedType) => {
+    const seedIndex = selectedSeeds.findIndex(
+      (currentSeed) => currentSeed.id === seed.id
+    );
+    let seeds: GeneratorSeed[] = [];
+    if (seedIndex >= 0) {
+      seeds = [...selectedSeeds];
+      seeds.splice(seedIndex, 1);
+    } else {
+      seeds = [...selectedSeeds, seed];
+    }
+    setSelectedSeeds(seeds);
+    props.updateSeeds(seeds);
+  };
+
+  const parseSeed = (seed: any, type: SeedType) => {
+    const newSeed: GeneratorSeed = {
+      id: seed.id,
+      type,
+      name: seed.name,
+    };
+    if (type === SeedType.ARTIST) {
+      newSeed.image = seed.images.length
+        ? seed.images[1].url
+        : `https://i.stack.imgur.com/y9DpT.jpg`;
+    } else {
+      newSeed.image = seed.album.images[1].url;
+      newSeed.artist = seed.artists[0].name;
+      newSeed.album = seed.album.name;
+    }
+    return newSeed;
+  };
 
   let inflightSearch: any = null;
 
@@ -70,20 +110,30 @@ const SearchBar = (props: SearchBarProps) => {
   };
 
   const mapResults = () => {
-    return topResults.map((result: any, i) => {
+    const parsedResults = topResults.map((seed) => parseSeed(seed, seed.type));
+    const res = parsedResults.map((result: any, i) => {
+      const isAdded = selectedSeeds.find((seed) => seed.id === result.id);
+
       if (result.type === SeedType.ARTIST) {
         return (
           <ArtistItem
             artist={result}
             key={i}
-            clickHandler={props.updateSeeds}
+            clickHandler={addOrRemoveSeed}
+            isAdded={!!isAdded}
           />
         );
       }
       return (
-        <TrackItem track={result} key={i} clickHandler={props.updateSeeds} />
+        <TrackItem
+          track={result}
+          key={i}
+          clickHandler={addOrRemoveSeed}
+          isAdded={!!isAdded}
+        />
       );
     });
+    return res;
   };
 
   return (
@@ -97,10 +147,12 @@ const SearchBar = (props: SearchBarProps) => {
           placeholder="Search for a song or artist"
         />
       </div>
-      <SpinnerOrComponent
-        isLoading={isLoading}
-        componentRenderer={mapResults}
-      />
+      <div className={styles.search_results}>
+        <SpinnerOrComponent
+          isLoading={isLoading}
+          componentRenderer={mapResults}
+        />
+      </div>
     </div>
   );
 };
