@@ -14,13 +14,18 @@ type SelectProps = {
 };
 
 const Select = (props: SelectProps) => {
-  const options = props.options.map((option: SelectOption) => {
+  const options = props.options.map((option: SelectOption, i: number) => {
     return (
-      <option value={option.value} selected={option.isSelected}>
+      <option value={option.value} key={i}>
         {option.label}
       </option>
     );
   });
+
+  const getSelectedValue = () => {
+    const selected = props.options.find((option) => option.isSelected);
+    return selected ? selected.value : undefined;
+  };
 
   return (
     <div>
@@ -28,6 +33,7 @@ const Select = (props: SelectProps) => {
       <select
         onChange={(ev) => props.handleChange(ev.target.value)}
         disabled={props.disabled}
+        value={getSelectedValue()}
       >
         {options}
       </select>

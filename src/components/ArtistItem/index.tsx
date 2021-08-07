@@ -10,17 +10,13 @@ type ArtistItemProps = {
 };
 
 const artistItem = (props: ArtistItemProps) => {
-  const { isAdded, artist, key, clickHandler } = props;
+  const { isAdded, artist, clickHandler } = props;
   const artistName = artist.name;
-  let artistImg = `https://i.stack.imgur.com/y9DpT.jpg`;
-  if (isAdded) {
-    artistImg = artist.image;
-  }
-  if (artist?.images && artist?.images.length) {
-    artistImg = artist.images[1].url;
-  }
+
+  const artistImg = artist?.image || `https://i.stack.imgur.com/y9DpT.jpg`;
+
   return (
-    <div key={key} className={styles.wrapper}>
+    <div className={styles.wrapper}>
       <img src={artistImg} />
       <span className={styles.artist_name}>{artistName}</span>
       <Button

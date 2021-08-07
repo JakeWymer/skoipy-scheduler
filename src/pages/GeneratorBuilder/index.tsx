@@ -1,4 +1,6 @@
 import { useState } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import Button from "../../components/Button";
 import { Link, Redirect, useLocation, useParams } from "react-router-dom";
 import { ButtonTheme } from "../../components/Button/types";
@@ -14,6 +16,8 @@ import { LinkDataState, Params, ScheduleTypes, ScheduleDays } from "./types";
 import Select, { SelectOption } from "../../components/Select";
 import { capitalize } from "lodash";
 import SelectedSeeds from "../../components/SelectedSeeds";
+import { arraysAreEqual, successToast } from "../../utils";
+import FadedHr from "../../components/FadedHr";
 
 const GeneratorBuilder = () => {
   const [generatorSeeds, setGeneratorSeeds] = useState<GeneratorSeed[]>([]);
@@ -50,20 +54,8 @@ const GeneratorBuilder = () => {
     setGeneratorName(ev.target.value);
   };
 
-  const updateSeeds = (seed: any, type: SeedType) => {
-    const newSeed: GeneratorSeed = {
-      id: seed.id,
-      type,
-      name: seed.name,
-    };
-    if (type === SeedType.ARTIST) {
-      newSeed.image = seed.images[1].url;
-    } else {
-      newSeed.image = seed.album.images[1].url;
-      newSeed.artist = seed.artists[0].name;
-      newSeed.album = seed.album.name;
-    }
-    setGeneratorSeeds([...generatorSeeds, newSeed]);
+  const updateSeeds = (seeds: GeneratorSeed[]) => {
+    setGeneratorSeeds(seeds);
   };
 
   const createOrUpdateGenerator = async () => {
@@ -99,16 +91,6 @@ const GeneratorBuilder = () => {
     setGeneratorSeeds([]);
     setGeneratorName(``);
     setShouldRedirect(true);
-  };
-
-  const mapSeeds = () => {
-    return generatorSeeds.map((seed, i) => {
-      return (
-        <div key={i}>
-          <div>{seed.name}</div>
-        </div>
-      );
-    });
   };
 
   const frequencyOptions = (): SelectOption[] => {
@@ -194,6 +176,29 @@ const GeneratorBuilder = () => {
     setGeneratorSeeds(seedsCopy);
   };
 
+  const handleAddButton = () => {
+    const MySwal = withReactContent(Swal);
+    let seeds: GeneratorSeed[] = [...generatorSeeds];
+    MySwal.fire({
+      html: (
+        <SearchBar
+          selectedSeeds={seeds}
+          updateSeeds={(newSeeds: GeneratorSeed[]) => {
+            seeds = newSeeds;
+          }}
+        />
+      ),
+      width: `1000px`,
+      confirmButtonColor: `#3a405a`,
+      preConfirm: () => {
+        if (!arraysAreEqual(seeds, generatorSeeds)) {
+          successToast(`Successfully updated seeds`);
+        }
+        setGeneratorSeeds(seeds);
+      },
+    });
+  };
+
   return (
     <div className={style.wrapper}>
       <Input
@@ -215,8 +220,9 @@ const GeneratorBuilder = () => {
           disabled={ScheduleTypes.WEEKLY !== generatorFrequency}
         />
       </div>
+      <Button text="Add Seeds" clickHandler={handleAddButton} />
+      <FadedHr />
       <div className={style.selection_section}>
-        <SearchBar updateSeeds={updateSeeds} />
         <SelectedSeeds seeds={generatorSeeds} removeSeed={removeSeed} />
       </div>
       <div className={style.control_buttons}>

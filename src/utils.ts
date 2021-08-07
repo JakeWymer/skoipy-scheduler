@@ -44,4 +44,8 @@ export const capitalized = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
+export const arraysAreEqual = (a: any[], b: any[]) => {
+  return a.length === b.length && a.every((v, i) => v === b[i]);
+};
+
 export const noop = () => {};

@@ -1,5 +1,8 @@
+import { GeneratorSeed } from "../../pages/Dashboard/types";
+
 export type SearchBarProps = {
   updateSeeds: any;
+  selectedSeeds: GeneratorSeed[];
 };
 
 export enum SeedType {

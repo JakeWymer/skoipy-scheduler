@@ -2,8 +2,10 @@
 
 .search_wrapper {
   height: 100%;
-  width: 50%;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   .search_result {
     align-items: center;
@@ -22,5 +24,14 @@
     position: sticky;
     top: 0px;
     background-color: white;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .search_results {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
   }
 }
