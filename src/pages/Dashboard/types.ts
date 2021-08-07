@@ -17,6 +17,8 @@ export type Generator = {
   seeds: GeneratorSeed[];
   schedule_frequency: ScheduleTypes;
   schedule_day: ScheduleDays;
+  opt_in_text: boolean;
+  phone_number: string;
 };
 
 export interface GeneratorResponse extends BaseApiResponse {

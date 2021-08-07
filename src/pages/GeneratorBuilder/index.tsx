@@ -31,6 +31,8 @@ const GeneratorBuilder = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [shouldRedirect, setShouldRedirect] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [optInText, setOptInText] = useState<boolean>(false);
+  const [phoneNumber, setPhoneNumber] = useState<string>(``);
 
   const { state }: { state: LinkDataState } = useLocation();
   const params: Params = useParams();
@@ -42,6 +44,8 @@ const GeneratorBuilder = () => {
         setGeneratorSeeds(state.generator.seeds);
         setGeneratorFrequency(state.generator.schedule_frequency);
         setGeneratorDay(state.generator.schedule_day);
+        setOptInText(state.generator.opt_in_text);
+        setPhoneNumber(state.generator.phone_number);
         setIsEditing(true);
       } else {
         // Try to fetch generator here. This might happen if someone navigates directly to this page
@@ -69,6 +73,8 @@ const GeneratorBuilder = () => {
           generatorFrequency,
           generatorDay:
             generatorFrequency === ScheduleTypes.WEEKLY ? generatorDay : null,
+          optInText,
+          phoneNumber,
         },
         `Unable to update ${generatorName}`,
         `Updated ${generatorName}`
@@ -82,6 +88,8 @@ const GeneratorBuilder = () => {
           generatorFrequency,
           generatorDay:
             generatorFrequency === ScheduleTypes.WEEKLY ? generatorDay : null,
+          optInText,
+          phoneNumber,
         },
         `Unable to create ${generatorName}`,
         `Created ${generatorName}`
@@ -199,6 +207,14 @@ const GeneratorBuilder = () => {
     });
   };
 
+  const handleOptInText = (ev: any) => {
+    setOptInText(ev.target.checked);
+  };
+
+  const handlePhoneNumber = (ev: any) => {
+    setPhoneNumber(ev.target.value);
+  };
+
   return (
     <div className={style.wrapper}>
       <Input
@@ -220,6 +236,20 @@ const GeneratorBuilder = () => {
           disabled={ScheduleTypes.WEEKLY !== generatorFrequency}
         />
       </div>
+      <label htmlFor="opt-in">Opt into texts for this playlist</label>
+      <br></br>
+      <input
+        type="checkbox"
+        checked={optInText}
+        onChange={handleOptInText}
+        name="opt-in"
+      ></input>
+      <Input
+        placeholder="Phone Number"
+        handleChange={handlePhoneNumber}
+        value={phoneNumber}
+        disabled={!optInText}
+      />
       <Button text="Add Seeds" clickHandler={handleAddButton} />
       <FadedHr />
       <div className={style.selection_section}>

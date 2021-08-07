@@ -33,6 +33,12 @@ module.exports = (sequelize, DataTypes) => {
       schedule_day: {
         type: DataTypes.STRING,
       },
+      opt_in_text: {
+        type: DataTypes.BOOLEAN,
+      },
+      phone_number: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,
