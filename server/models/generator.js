@@ -39,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
       phone_number: {
         type: DataTypes.STRING,
       },
+      overwrite_existing: {
+        type: DataTypes.BOOLEAN,
+      },
     },
     {
       sequelize,
