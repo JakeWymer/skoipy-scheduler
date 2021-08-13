@@ -9,12 +9,39 @@ import { ButtonTheme } from "../../components/Button/types";
 import ClockLogo from "./Assets/clock-logo.svg";
 import NewFollowLogo from "./Assets/new-follow-logo.svg";
 import PlaylistLogo from "./Assets/playlist-logo.svg";
+import ApiClient from "../../api";
+import { useState, useEffect } from "react";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import { Redirect } from "react-router-dom";
+import { UserResponse } from "../../AuthedRoute";
 
 const Home = () => {
+  const [shouldRedirect, setShouldRedirect] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    ApiClient.get<UserResponse>("/me").then((res) => {
+      const user = res.user;
+      if (!!user) {
+        setShouldRedirect(true);
+      }
+      setIsLoading(false);
+    });
+  }, []);
+
   const handleDiscordButton = () => {
     window.location.href =
       "https://discord.com/api/oauth2/authorize?client_id=594723147538890753&permissions=2150631424&scope=bot%20applications.commands";
   };
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (shouldRedirect) {
+    return <Redirect to="/dashboard" />;
+  }
+
   return (
     <div>
       <section className="hero">
