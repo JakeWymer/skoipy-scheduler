@@ -24,17 +24,17 @@ const handleSearch = async (ctx) => {
 const createGenerator = async (ctx) => {
   const user = ctx.state.user;
   let error = null;
+  const body = ctx.request.body;
+  const {
+    generatorName,
+    generatorSeeds,
+    generatorFrequency,
+    generatorDay,
+    optInText,
+    phoneNumber,
+    overwriteExisting,
+  } = body;
   try {
-    const body = ctx.request.body;
-    const {
-      generatorName,
-      generatorSeeds,
-      generatorFrequency,
-      generatorDay,
-      optInText,
-      phoneNumber,
-      overwriteExisting,
-    } = body;
     await Generator.create({
       owner_id: user.id,
       name: generatorName,
@@ -51,7 +51,6 @@ const createGenerator = async (ctx) => {
       [PROPERTIES.DISTINCT_ID]: user.id,
     });
   } catch (e) {
-    console.error(e);
     error = `Failed to create generator`;
     mp.track(EVENTS.GENERATOR_CREATION_FAILED, {
       [PROPERTIES.USER_ID]: user.id,
@@ -60,7 +59,7 @@ const createGenerator = async (ctx) => {
     });
   }
   const generators = await getGeneratorsByOwnerId(user.id);
-  ctx.response.body = { generators, error };
+  return (ctx.response.body = { generators, error });
 };
 
 const generatePlaylist = async (ctx) => {
@@ -78,7 +77,6 @@ const generatePlaylist = async (ctx) => {
       throw new Error("Only owner can generate playlist");
     }
     await buildPlaylist(generator, user);
-    ctx.response.body = response;
     mp.track(EVENTS.PLAYLIST_GENERATED, {
       [PROPERTIES.USER_ID]: user.id,
       [PROPERTIES.GENERATOR_ID]: generatorId,
@@ -91,8 +89,8 @@ const generatePlaylist = async (ctx) => {
       [PROPERTIES.DISTINCT_ID]: user.id,
     });
     response.isError = true;
-    ctx.response.body = response;
   }
+  return (ctx.response.body = response);
 };
 
 const buildPlaylist = async (generator, user) => {
@@ -302,6 +300,7 @@ module.exports = {
   createGenerator,
   generatePlaylist,
   getUserGenerators,
+  getNextPlaylistName,
   buildPlaylist,
   editGenerator,
   deleteGenerator,
