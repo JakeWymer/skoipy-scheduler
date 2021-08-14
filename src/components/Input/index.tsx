@@ -13,14 +13,11 @@ export type InputProps = {
 const Input = (props: InputProps) => {
   const inputRef = useRef(null);
   useEffect(() => {
-    const input = document.getElementsByClassName(
-      styles.input
-    )[0] as HTMLInputElement;
     // @ts-expect-error
     inputRef.current.style.fontSize = `${
       props.fontSize ? props.fontSize : 16
     }px`;
-  }, []);
+  }, [props.fontSize]);
 
   const getLabelId = () => {
     return props?.label ? props.label.toLowerCase().replaceAll(" ", "_") : "";

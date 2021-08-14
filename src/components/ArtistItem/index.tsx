@@ -17,7 +17,7 @@ const artistItem = (props: ArtistItemProps) => {
 
   return (
     <div className={styles.wrapper}>
-      <img src={artistImg} />
+      <img src={artistImg} alt={artistName} />
       <span className={styles.artist_name}>{artistName}</span>
       <Button
         text={isAdded ? "Remove" : "Add"}

@@ -43,6 +43,26 @@ describe("Creates Generators", () => {
   });
 });
 
+describe("Fetch Generators", () => {
+  it("gets generator by id", async () => {
+    Generator.findOne.mockResolvedValue(createGeneratorBody);
+    const getGeneratorCtx = createCtx((params = { id: 1 }));
+    const result = await generatorController.getGeneratorById(getGeneratorCtx);
+    expect(result).toEqual({ isError: false, generator: createGeneratorBody });
+  });
+
+  it("handles error", async () => {
+    Generator.findOne.mockImplementation(() => {
+      throw new Error();
+    });
+    const getGeneratorCtx = createCtx((params = { id: 1 }));
+    const result = await generatorController.getGeneratorById(getGeneratorCtx);
+    expect(result).toEqual({
+      isError: true,
+    });
+  });
+});
+
 describe("Generates Playlists", () => {
   it("increments playlist number if not overwriting", async () => {
     fetch.mockResolvedValue(userPlaylistApiResponse);

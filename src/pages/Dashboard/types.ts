@@ -20,6 +20,7 @@ export type Generator = {
   opt_in_text: boolean;
   phone_number: string;
   overwrite_existing: boolean;
+  owner_id: number;
 };
 
 export interface GeneratorResponse extends BaseApiResponse {

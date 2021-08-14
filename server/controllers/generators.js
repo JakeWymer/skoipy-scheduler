@@ -295,6 +295,20 @@ const deleteGenerator = async (ctx) => {
   return (ctx.response.body = { isError: false, generators: userGenerators });
 };
 
+const getGeneratorById = async (ctx) => {
+  const generatorId = parseInt(ctx.params.id);
+  try {
+    const generator = await Generator.findOne({
+      where: {
+        id: generatorId,
+      },
+    });
+    return (ctx.response.body = { isError: false, generator });
+  } catch {
+    return (ctx.response.body = { isError: true });
+  }
+};
+
 module.exports = {
   handleSearch,
   createGenerator,
@@ -304,4 +318,5 @@ module.exports = {
   buildPlaylist,
   editGenerator,
   deleteGenerator,
+  getGeneratorById,
 };

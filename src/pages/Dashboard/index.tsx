@@ -28,6 +28,7 @@ const Dashboard = (props: AuthProps) => {
           key={i}
           generator={generator}
           setUserGenerators={setUserGenerators}
+          isOwner={props.user.id === generator.owner_id}
         />
       );
     });

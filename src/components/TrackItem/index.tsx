@@ -19,7 +19,7 @@ const TrackItem = (props: TrackItemProps) => {
 
   return (
     <div className={styles.wrapper}>
-      <img src={albumImg} />
+      <img src={albumImg} alt={artistName} />
       <div className={styles.track_info}>
         <div>{trackName}</div>
         <div className={styles.sub_header}>
