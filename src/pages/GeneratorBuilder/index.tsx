@@ -5,21 +5,28 @@ import Button from "../../components/Button";
 import { Link, Redirect, useLocation, useParams } from "react-router-dom";
 import { ButtonTheme } from "../../components/Button/types";
 import Input from "../../components/Input";
-import { SeedType } from "../../components/SearchBar/types";
 import { GeneratorSeed } from "../Dashboard/types";
 import SearchBar from "../../components/SearchBar";
 
 import style from "./style.module.scss";
 import { useEffect } from "react";
 import ApiClient from "../../api";
-import { LinkDataState, Params, ScheduleTypes, ScheduleDays } from "./types";
+import {
+  LinkDataState,
+  Params,
+  ScheduleTypes,
+  ScheduleDays,
+  SingleGeneratorResponse,
+} from "./types";
 import Select, { SelectOption } from "../../components/Select";
 import { capitalize } from "lodash";
 import SelectedSeeds from "../../components/SelectedSeeds";
-import { arraysAreEqual, successToast } from "../../utils";
+import { arraysAreEqual, successToast, warningToast } from "../../utils";
 import FadedHr from "../../components/FadedHr";
+import { AuthProps } from "../../AuthedRoute";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
-const GeneratorBuilder = () => {
+const GeneratorBuilder = (props: AuthProps) => {
   const [generatorSeeds, setGeneratorSeeds] = useState<GeneratorSeed[]>([]);
   const [generatorName, setGeneratorName] = useState<string>(``);
   const [generatorFrequency, setGeneratorFrequency] = useState<ScheduleTypes>(
@@ -34,34 +41,103 @@ const GeneratorBuilder = () => {
   const [optInText, setOptInText] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<string>(``);
   const [overwriteExisting, setOverwriteExisting] = useState<boolean>(false);
+  const [generatorOwner, setGeneratorOwner] = useState<number>();
 
   const { state }: { state: LinkDataState } = useLocation();
   const params: Params = useParams();
 
+  const updateGenerator = (
+    name: string,
+    seeds: GeneratorSeed[],
+    frequency: ScheduleTypes,
+    day: ScheduleDays,
+    text: boolean,
+    phone: string,
+    overwriteExisting: boolean
+  ) => {
+    setGeneratorName(name);
+    setGeneratorSeeds(seeds);
+    setGeneratorFrequency(frequency);
+    setGeneratorDay(day);
+    setOptInText(text);
+    setPhoneNumber(phone);
+    setIsEditing(true);
+    setOverwriteExisting(overwriteExisting);
+  };
+
   useEffect(() => {
-    if (params?.generatorId) {
-      if (state.generator) {
-        setGeneratorName(state.generator.name);
-        setGeneratorSeeds(state.generator.seeds);
-        setGeneratorFrequency(state.generator.schedule_frequency);
-        setGeneratorDay(state.generator.schedule_day);
-        setOptInText(state.generator.opt_in_text);
-        setPhoneNumber(state.generator.phone_number);
-        setIsEditing(true);
-        setOverwriteExisting(state.generator.overwrite_existing);
+    setIsLoading(true);
+    let generatorId = params?.generatorId && parseInt(params.generatorId);
+    console.log(generatorId);
+    if (generatorId) {
+      setIsEditing(true);
+    }
+    if (isEditing) {
+      if (state?.generator) {
+        const {
+          name,
+          seeds,
+          schedule_frequency,
+          schedule_day,
+          opt_in_text,
+          phone_number,
+          overwrite_existing,
+          owner_id,
+        } = state.generator;
+        setGeneratorOwner(owner_id);
+        updateGenerator(
+          name,
+          seeds,
+          schedule_frequency,
+          schedule_day,
+          opt_in_text,
+          phone_number,
+          overwrite_existing
+        );
       } else {
         // Try to fetch generator here. This might happen if someone navigates directly to this page
+        ApiClient.get<SingleGeneratorResponse>(
+          `/generators/${generatorId}`,
+          `Failed to fetch generator`
+        ).then((response) => {
+          if (!response.generator) {
+            setShouldRedirect(true);
+          }
+          const {
+            name,
+            seeds,
+            schedule_frequency,
+            schedule_day,
+            opt_in_text,
+            phone_number,
+            overwrite_existing,
+            owner_id,
+          } = response.generator;
+          updateGenerator(
+            name,
+            seeds,
+            schedule_frequency,
+            schedule_day,
+            opt_in_text,
+            phone_number,
+            overwrite_existing
+          );
+          setGeneratorOwner(owner_id);
+        });
       }
     }
     setIsLoading(false);
-  }, []);
+  }, [params.generatorId, state?.generator, isEditing]);
+
+  useEffect(() => {
+    if (generatorOwner && generatorOwner !== props.user.id) {
+      warningToast(`You must be owner of a generator to edit it`);
+      setShouldRedirect(true);
+    }
+  }, [generatorOwner, props.user.id]);
 
   const handleNameInput = (ev: any) => {
     setGeneratorName(ev.target.value);
-  };
-
-  const updateSeeds = (seeds: GeneratorSeed[]) => {
-    setGeneratorSeeds(seeds);
   };
 
   const createOrUpdateGenerator = async () => {
@@ -214,12 +290,18 @@ const GeneratorBuilder = () => {
   const handleOptInText = (ev: any) => {
     setOptInText(ev.target.checked);
   };
+
   const handleOverwriteExisting = (ev: any) => {
     setOverwriteExisting(ev.target.checked);
   };
+
   const handlePhoneNumber = (ev: any) => {
     setPhoneNumber(ev.target.value);
   };
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className={style.wrapper}>

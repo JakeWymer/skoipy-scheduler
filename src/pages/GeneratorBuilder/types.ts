@@ -1,3 +1,4 @@
+import { BaseApiResponse } from "../../api";
 import { Generator } from "../Dashboard/types";
 
 export type LinkDataState = {
@@ -24,4 +25,8 @@ export enum ScheduleDays {
   THURSDAY = `thursday`,
   FRIDAY = `friday`,
   SATURDAY = `saturday`,
+}
+
+export interface SingleGeneratorResponse extends BaseApiResponse {
+  generator: Generator;
 }

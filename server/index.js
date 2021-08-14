@@ -48,6 +48,11 @@ router.get(
   middleware.checkAuth,
   generatorController.getUserGenerators
 );
+router.get(
+  `/generators/:id`,
+  middleware.checkAuth,
+  generatorController.getGeneratorById
+);
 router.post(
   `/generators/:id/generate`,
   middleware.checkAuth,

@@ -15,6 +15,7 @@ import style from "./style.module.scss";
 export type GeneratorCardProps = {
   generator: Generator;
   setUserGenerators: any;
+  isOwner: boolean;
 };
 
 const GeneratorCard = (props: GeneratorCardProps) => {
@@ -69,19 +70,24 @@ const GeneratorCard = (props: GeneratorCardProps) => {
 
   return (
     <div className={style.generator_card_wrapper}>
-      <Link
-        to={{
-          pathname: `/generator/${props.generator.id}/edit`,
-          state: { generator: props.generator },
-        }}
-      >
-        <img src={EditIcon} className={style.edit_icon} />
-      </Link>
-      <img
-        src={DeleteIcon}
-        className={style.delete_icon}
-        onClick={deleteGenerator}
-      />
+      {props.isOwner && (
+        <>
+          <Link
+            to={{
+              pathname: `/generator/${props.generator.id}/edit`,
+              state: { generator: props.generator },
+            }}
+          >
+            <img src={EditIcon} className={style.edit_icon} alt="edit" />
+          </Link>
+          <img
+            alt="delete"
+            src={DeleteIcon}
+            className={style.delete_icon}
+            onClick={deleteGenerator}
+          />
+        </>
+      )}
       <h3 className={style.generator_card_title}>{props.generator.name}</h3>
       <div className={style.generator_card_buttons}>
         <SpinnerOrComponent
