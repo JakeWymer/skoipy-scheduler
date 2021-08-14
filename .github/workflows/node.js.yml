@@ -9,6 +9,23 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  REACT_APP_API_KEY: ${{secrets.REACT_APP_API_KEY}}
+  SPOTIFY_CLIENT_ID: ${{secrets.SPOTIFY_CLIENT_ID}}
+  SPOTIFY_CLIENT_SECRET: ${{secrets.SPOTIFY_CLIENT_SECRET}}
+  SPOTIFY_CALLBACK_URL: ${{secrets.SPOTIFY_CALLBACK_URL}}
+  BASE_URL: ${{secrets.BASE_URL}}
+  DB_HOST: ${{secrets.DB_HOST}}
+  DB_USER: ${{secrets.DB_USER}}
+  DB_NAME: ${{secrets.DB_NAME}}
+  DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+  REACT_APP_MP_PROJECT_TOKEN: ${{secrets.REACT_APP_MP_PROJECT_TOKEN}}
+  NODE_ENV: ${{secrets.NODE_ENV}}
+  SESSION_KEYS: ${{secrets.SESSION_KEYS}}
+  TWILIO_ACCOUNT_ID: ${{secrets.TWILIO_ACCOUNT_ID}}
+  TWILIO_AUTH_TOKEN: ${{secrets.TWILIO_AUTH_TOKEN}}
+  TWILIO_SERVICE_ID: ${{secrets.TWILIO_SERVICE_ID}}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,5 +43,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: yarn install --frozen-lockfile
-      - run: CI=false yarn build
       - run: yarn test
+      - run: CI=false yarn build
