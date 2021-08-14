@@ -1,10 +1,10 @@
 const Mixpanel = require("mixpanel");
 
-const isProdEnv = process.env.NODE_ENV === `production`;
 const mpProjectToken = process.env.REACT_APP_MP_PROJECT_TOKEN;
 
 const mixpanel = Mixpanel.init(mpProjectToken, {
-  debug: !isProdEnv,
+  debug: process.env.NODE_ENV === "development",
+  test: process.env.NODE_ENV === "test",
 });
 
 const EVENTS = {
