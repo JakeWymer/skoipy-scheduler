@@ -25,7 +25,8 @@ const SearchBar = (props: SearchBarProps) => {
 
   useEffect(() => {
     setSelectedSeeds(props.selectedSeeds);
-  }, [props.selectedSeeds]);
+    setBlockedSeeds(props.blockedSeeds);
+  }, [props.selectedSeeds, props.blockedSeeds]);
 
   const addOrRemoveSeed = (seed: any, type: SeedType) => {
     const seedIndex = selectedSeeds.findIndex(
