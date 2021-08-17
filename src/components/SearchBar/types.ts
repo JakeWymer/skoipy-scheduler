@@ -3,6 +3,7 @@ import { GeneratorSeed } from "../../pages/Dashboard/types";
 export type SearchBarProps = {
   updateSeeds: any;
   selectedSeeds: GeneratorSeed[];
+  blockedSeeds: GeneratorSeed[];
 };
 
 export enum SeedType {

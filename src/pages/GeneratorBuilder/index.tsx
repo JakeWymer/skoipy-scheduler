@@ -284,6 +284,7 @@ const GeneratorBuilder = (props: AuthProps) => {
       html: (
         <SearchBar
           selectedSeeds={seeds}
+          blockedSeeds={tempBlockedSeeds}
           updateSeeds={(newSeeds: GeneratorSeed[], isBlock = false) => {
             if (!isBlock) {
               seeds = newSeeds;
