@@ -23,6 +23,9 @@ module.exports = (sequelize, DataTypes) => {
       seeds: {
         type: DataTypes.JSONB,
       },
+      blocked_seeds: {
+        type: DataTypes.JSONB,
+      },
       owner_id: {
         type: DataTypes.INTEGER,
         allowNull: false,

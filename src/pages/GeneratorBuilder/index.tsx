@@ -28,6 +28,7 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 
 const GeneratorBuilder = (props: AuthProps) => {
   const [generatorSeeds, setGeneratorSeeds] = useState<GeneratorSeed[]>([]);
+  const [blockedSeeds, setBlockedSeeds] = useState<GeneratorSeed[]>([]);
   const [generatorName, setGeneratorName] = useState<string>(``);
   const [generatorFrequency, setGeneratorFrequency] = useState<ScheduleTypes>(
     ScheduleTypes.NEVER
@@ -53,7 +54,8 @@ const GeneratorBuilder = (props: AuthProps) => {
     day: ScheduleDays,
     text: boolean,
     phone: string,
-    overwriteExisting: boolean
+    overwriteExisting: boolean,
+    blocked_seeds: GeneratorSeed[]
   ) => {
     setGeneratorName(name);
     setGeneratorSeeds(seeds);
@@ -63,12 +65,12 @@ const GeneratorBuilder = (props: AuthProps) => {
     setPhoneNumber(phone);
     setIsEditing(true);
     setOverwriteExisting(overwriteExisting);
+    setBlockedSeeds(blocked_seeds);
   };
 
   useEffect(() => {
     setIsLoading(true);
     let generatorId = params?.generatorId && parseInt(params.generatorId);
-    console.log(generatorId);
     if (generatorId) {
       setIsEditing(true);
     }
@@ -83,6 +85,7 @@ const GeneratorBuilder = (props: AuthProps) => {
           phone_number,
           overwrite_existing,
           owner_id,
+          blocked_seeds,
         } = state.generator;
         setGeneratorOwner(owner_id);
         updateGenerator(
@@ -92,7 +95,8 @@ const GeneratorBuilder = (props: AuthProps) => {
           schedule_day,
           opt_in_text,
           phone_number,
-          overwrite_existing
+          overwrite_existing,
+          blocked_seeds
         );
       } else {
         // Try to fetch generator here. This might happen if someone navigates directly to this page
@@ -112,6 +116,7 @@ const GeneratorBuilder = (props: AuthProps) => {
             phone_number,
             overwrite_existing,
             owner_id,
+            blocked_seeds,
           } = response.generator;
           updateGenerator(
             name,
@@ -120,7 +125,8 @@ const GeneratorBuilder = (props: AuthProps) => {
             schedule_day,
             opt_in_text,
             phone_number,
-            overwrite_existing
+            overwrite_existing,
+            blocked_seeds
           );
           setGeneratorOwner(owner_id);
         });
@@ -154,6 +160,7 @@ const GeneratorBuilder = (props: AuthProps) => {
           optInText,
           phoneNumber,
           overwriteExisting,
+          blockedSeeds,
         },
         `Unable to update ${generatorName}`,
         `Updated ${generatorName}`
@@ -170,6 +177,7 @@ const GeneratorBuilder = (props: AuthProps) => {
           optInText,
           phoneNumber,
           overwriteExisting,
+          blockedSeeds,
         },
         `Unable to create ${generatorName}`,
         `Created ${generatorName}`
@@ -255,24 +263,33 @@ const GeneratorBuilder = (props: AuthProps) => {
     return <Redirect to="/dashboard" />;
   }
 
-  const removeSeed = (seed: GeneratorSeed) => {
-    const seedIndex = generatorSeeds.findIndex(
+  const removeSeed = (
+    seed: GeneratorSeed,
+    seedArray: GeneratorSeed[],
+    seedUpdater: any
+  ) => {
+    const seedIndex = seedArray.findIndex(
       (generatorSeed) => generatorSeed.id === seed.id
     );
-    const seedsCopy = [...generatorSeeds];
+    const seedsCopy = [...seedArray];
     seedsCopy.splice(seedIndex, 1);
-    setGeneratorSeeds(seedsCopy);
+    seedUpdater(seedsCopy);
   };
 
   const handleAddButton = () => {
     const MySwal = withReactContent(Swal);
     let seeds: GeneratorSeed[] = [...generatorSeeds];
+    let tempBlockedSeeds: GeneratorSeed[] = [...blockedSeeds];
     MySwal.fire({
       html: (
         <SearchBar
           selectedSeeds={seeds}
-          updateSeeds={(newSeeds: GeneratorSeed[]) => {
-            seeds = newSeeds;
+          updateSeeds={(newSeeds: GeneratorSeed[], isBlock = false) => {
+            if (!isBlock) {
+              seeds = newSeeds;
+            } else {
+              tempBlockedSeeds = newSeeds;
+            }
           }}
         />
       ),
@@ -283,6 +300,7 @@ const GeneratorBuilder = (props: AuthProps) => {
           successToast(`Successfully updated seeds`);
         }
         setGeneratorSeeds(seeds);
+        setBlockedSeeds(tempBlockedSeeds);
       },
     });
   };
@@ -349,7 +367,20 @@ const GeneratorBuilder = (props: AuthProps) => {
       <Button text="Add Seeds" clickHandler={handleAddButton} />
       <FadedHr />
       <div className={style.selection_section}>
-        <SelectedSeeds seeds={generatorSeeds} removeSeed={removeSeed} />
+        <SelectedSeeds
+          seeds={generatorSeeds}
+          removeSeed={(seed: GeneratorSeed) =>
+            removeSeed(seed, generatorSeeds, setGeneratorSeeds)
+          }
+        />
+      </div>
+      <div className={style.selection_section}>
+        <SelectedSeeds
+          seeds={blockedSeeds}
+          removeSeed={(seed: GeneratorSeed) =>
+            removeSeed(seed, blockedSeeds, setBlockedSeeds)
+          }
+        />
       </div>
       <div className={style.control_buttons}>
         <Link to="/dashboard">

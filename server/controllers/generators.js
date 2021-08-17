@@ -33,6 +33,7 @@ const createGenerator = async (ctx) => {
     optInText,
     phoneNumber,
     overwriteExisting,
+    blockedSeeds,
   } = body;
   try {
     await Generator.create({
@@ -44,6 +45,7 @@ const createGenerator = async (ctx) => {
       opt_in_text: optInText,
       phone_number: phoneNumber,
       overwrite_existing: overwriteExisting,
+      blocked_seeds: blockedSeeds,
     });
     mp.track(EVENTS.GENERATOR_CREATED, {
       [PROPERTIES.USER_ID]: user.id,
@@ -97,7 +99,8 @@ const buildPlaylist = async (generator, user) => {
   try {
     const recommendedTracks = await getRecommendedTracks(
       user.accessToken,
-      generator.seeds
+      generator.seeds,
+      generator.blocked_seeds
     );
     const trackUris = recommendedTracks.map((track) => {
       return track.uri;
@@ -141,7 +144,10 @@ const getGeneratorsByOwnerId = async (ownerId) => {
   return generators || [];
 };
 
-const getRecommendedTracks = async (accessToken, seeds) => {
+const getRecommendedTracks = async (accessToken, seeds, blockedSeeds) => {
+  const blockedSeedsIds = blockedSeeds.map((seed) => {
+    return seed.id;
+  });
   const recommendationUrl = `https://api.spotify.com/v1/recommendations`;
   const seedArtists = [];
   const seedGenres = [];
@@ -156,7 +162,9 @@ const getRecommendedTracks = async (accessToken, seeds) => {
   });
   const finalUrl = `${recommendationUrl}?seed_artists=${seedArtists.join(
     `,`
-  )}&seed_tracks=${seedTracks.join(`,`)}&seed_genres=${seedGenres.join(`,`)}`;
+  )}&seed_tracks=${seedTracks.join(`,`)}&seed_genres=${seedGenres.join(
+    `,`
+  )}&limit=50`;
   const rawResponse = await fetch(finalUrl, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -164,7 +172,13 @@ const getRecommendedTracks = async (accessToken, seeds) => {
     method: "GET",
   });
   const recommendationRes = await rawResponse.json();
-  return recommendationRes.tracks;
+  const tracks = recommendationRes.tracks.filter((track) => {
+    const containsBlockedArtist = track.artists.some((artist) => {
+      return blockedSeedsIds.includes(artist.id);
+    });
+    return !blockedSeedsIds.includes(track.id) && !containsBlockedArtist;
+  });
+  return tracks.slice(0, 20);
 };
 
 const getExistingPlaylist = async (user, generator) => {
@@ -259,6 +273,7 @@ const editGenerator = async (ctx) => {
   generator.opt_in_text = body.optInText;
   generator.phone_number = body.phoneNumber;
   generator.overwrite_existing = body.overwriteExisting;
+  generator.blocked_seeds = body.blockedSeeds;
 
   try {
     await generator.save();

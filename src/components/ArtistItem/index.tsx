@@ -5,12 +5,14 @@ import styles from "./style.module.scss";
 type ArtistItemProps = {
   artist: any;
   key: number;
-  clickHandler: any;
+  addHandler: any;
+  blockHandler?: any;
   isAdded?: boolean;
+  isBlocked?: boolean;
 };
 
 const artistItem = (props: ArtistItemProps) => {
-  const { isAdded, artist, clickHandler } = props;
+  const { isAdded, artist, addHandler, blockHandler, isBlocked } = props;
   const artistName = artist.name;
 
   const artistImg = artist?.image || `https://i.stack.imgur.com/y9DpT.jpg`;
@@ -21,8 +23,14 @@ const artistItem = (props: ArtistItemProps) => {
       <span className={styles.artist_name}>{artistName}</span>
       <Button
         text={isAdded ? "Remove" : "Add"}
-        clickHandler={() => clickHandler(artist, SeedType.ARTIST)}
+        clickHandler={() => addHandler(artist, SeedType.ARTIST)}
       />
+      {blockHandler && (
+        <Button
+          text={isBlocked ? "Unblock" : "Block"}
+          clickHandler={() => blockHandler(artist, SeedType.ARTIST)}
+        />
+      )}
     </div>
   );
 };
