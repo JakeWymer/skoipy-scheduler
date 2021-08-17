@@ -65,7 +65,7 @@ const GeneratorBuilder = (props: AuthProps) => {
     setPhoneNumber(phone);
     setIsEditing(true);
     setOverwriteExisting(overwriteExisting);
-    setBlockedSeeds(blocked_seeds);
+    setBlockedSeeds(blocked_seeds || []);
   };
 
   useEffect(() => {
