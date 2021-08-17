@@ -19,7 +19,7 @@ const SelectedSeeds = (props: SelectedSeedsProps) => {
         return (
           <ArtistItem
             artist={seed}
-            clickHandler={props.removeSeed}
+            addHandler={props.removeSeed}
             key={i}
             isAdded
           />
@@ -36,7 +36,7 @@ const SelectedSeeds = (props: SelectedSeedsProps) => {
         return (
           <TrackItem
             track={seed}
-            clickHandler={props.removeSeed}
+            addHandler={props.removeSeed}
             key={i}
             isAdded
           />

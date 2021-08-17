@@ -21,6 +21,7 @@ const SearchBar = (props: SearchBarProps) => {
   const [topResults, setTopResults] = useState<(Artist | Track)[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedSeeds, setSelectedSeeds] = useState<GeneratorSeed[]>([]);
+  const [blockedSeeds, setBlockedSeeds] = useState<GeneratorSeed[]>([]);
 
   useEffect(() => {
     setSelectedSeeds(props.selectedSeeds);
@@ -39,6 +40,21 @@ const SearchBar = (props: SearchBarProps) => {
     }
     setSelectedSeeds(seeds);
     props.updateSeeds(seeds);
+  };
+
+  const blockOrUnblockSeed = (seed: any, type: SeedType) => {
+    const seedIndex = blockedSeeds.findIndex(
+      (currentSeed) => currentSeed.id === seed.id
+    );
+    let seeds: GeneratorSeed[] = [];
+    if (seedIndex >= 0) {
+      seeds = [...blockedSeeds];
+      seeds.splice(seedIndex, 1);
+    } else {
+      seeds = [...blockedSeeds, seed];
+    }
+    setBlockedSeeds(seeds);
+    props.updateSeeds(seeds, true);
   };
 
   const parseSeed = (seed: any, type: SeedType) => {
@@ -113,14 +129,17 @@ const SearchBar = (props: SearchBarProps) => {
     const parsedResults = topResults.map((seed) => parseSeed(seed, seed.type));
     const res = parsedResults.map((result: any, i) => {
       const isAdded = selectedSeeds.find((seed) => seed.id === result.id);
+      const isBlocked = blockedSeeds.find((seed) => seed.id === result.id);
 
       if (result.type === SeedType.ARTIST) {
         return (
           <ArtistItem
             artist={result}
             key={i}
-            clickHandler={addOrRemoveSeed}
+            addHandler={addOrRemoveSeed}
             isAdded={!!isAdded}
+            blockHandler={blockOrUnblockSeed}
+            isBlocked={!!isBlocked}
           />
         );
       }
@@ -128,8 +147,10 @@ const SearchBar = (props: SearchBarProps) => {
         <TrackItem
           track={result}
           key={i}
-          clickHandler={addOrRemoveSeed}
+          addHandler={addOrRemoveSeed}
           isAdded={!!isAdded}
+          blockHandler={blockOrUnblockSeed}
+          isBlocked={!!isBlocked}
         />
       );
     });

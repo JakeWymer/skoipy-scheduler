@@ -21,6 +21,7 @@ export type Generator = {
   phone_number: string;
   overwrite_existing: boolean;
   owner_id: number;
+  blocked_seeds: GeneratorSeed[];
 };
 
 export interface GeneratorResponse extends BaseApiResponse {

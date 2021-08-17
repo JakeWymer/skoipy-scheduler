@@ -5,12 +5,14 @@ import styles from "./style.module.scss";
 type TrackItemProps = {
   track: any;
   key: number;
-  clickHandler: any;
+  addHandler: any;
+  blockHandler?: any;
   isAdded?: boolean;
+  isBlocked?: boolean;
 };
 
 const TrackItem = (props: TrackItemProps) => {
-  const { isAdded, track, clickHandler } = props;
+  const { isAdded, isBlocked, track, addHandler, blockHandler } = props;
 
   const artistName = track.artist;
   const trackName = track.name;
@@ -28,8 +30,14 @@ const TrackItem = (props: TrackItemProps) => {
       </div>
       <Button
         text={isAdded ? "Remove" : "Add"}
-        clickHandler={() => clickHandler(track, SeedType.TRACK)}
+        clickHandler={() => addHandler(track, SeedType.TRACK)}
       />
+      {blockHandler && (
+        <Button
+          text={isBlocked ? "Unblocked" : "Block"}
+          clickHandler={() => blockHandler(track, SeedType.TRACK)}
+        />
+      )}
     </div>
   );
 };
