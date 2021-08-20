@@ -34,7 +34,7 @@ const TrackItem = (props: TrackItemProps) => {
       />
       {blockHandler && (
         <Button
-          text={isBlocked ? "Unblocked" : "Block"}
+          text={isBlocked ? "Unblock" : "Block"}
           clickHandler={() => blockHandler(track, SeedType.TRACK)}
         />
       )}
