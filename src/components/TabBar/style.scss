@@ -1,0 +1,15 @@
+@import "../../styles/colors.scss";
+
+.selected {
+  border-bottom: 2px solid $skoip-navy;
+}
+
+.wrapper {
+  display: flex;
+  margin-bottom: 25px;
+}
+
+.tab {
+  margin-right: 10px;
+  padding: 5px;
+}
