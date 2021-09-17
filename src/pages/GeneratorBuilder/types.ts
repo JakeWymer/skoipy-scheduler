@@ -27,6 +27,12 @@ export enum ScheduleDays {
   SATURDAY = `saturday`,
 }
 
+export enum TabNames {
+  SEEDS = "Seeds",
+  ADVANCED = "Advanced",
+  SHARING = "Sharing",
+}
+
 export interface SingleGeneratorResponse extends BaseApiResponse {
   generator: Generator;
 }

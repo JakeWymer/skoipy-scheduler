@@ -25,6 +25,8 @@ import { arraysAreEqual, successToast, warningToast } from "../../utils";
 import FadedHr from "../../components/FadedHr";
 import { AuthProps } from "../../AuthedRoute";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import TabBar from "../../components/TabBar";
+import { TabNames } from "./types";
 
 const GeneratorBuilder = (props: AuthProps) => {
   const [generatorSeeds, setGeneratorSeeds] = useState<GeneratorSeed[]>([]);
@@ -43,6 +45,7 @@ const GeneratorBuilder = (props: AuthProps) => {
   const [phoneNumber, setPhoneNumber] = useState<string>(``);
   const [overwriteExisting, setOverwriteExisting] = useState<boolean>(false);
   const [generatorOwner, setGeneratorOwner] = useState<number>();
+  const [selectedTab, setSelectedTab] = useState<string>(TabNames.SEEDS);
 
   const { state }: { state: LinkDataState } = useLocation();
   const params: Params = useParams();
@@ -318,6 +321,75 @@ const GeneratorBuilder = (props: AuthProps) => {
     setPhoneNumber(ev.target.value);
   };
 
+  const handleTabClick = (tab: string) => {
+    setSelectedTab(tab);
+  };
+
+  const renderCurrentTab = () => {
+    switch (selectedTab) {
+      case TabNames.SEEDS:
+        return seedsSection;
+      case TabNames.ADVANCED:
+        return advancedSection;
+      case TabNames.SHARING:
+        return sharingSection;
+    }
+  };
+
+  const seedsSection = (
+    <div>
+      <Button text="Add Seeds" clickHandler={handleAddButton} />
+      <FadedHr />
+      <div className={style.selection_section}>
+        <SelectedSeeds
+          seeds={generatorSeeds}
+          removeSeed={(seed: GeneratorSeed) =>
+            removeSeed(seed, generatorSeeds, setGeneratorSeeds)
+          }
+        />
+      </div>
+      <div className={style.selection_section}>
+        <SelectedSeeds
+          seeds={blockedSeeds}
+          removeSeed={(seed: GeneratorSeed) =>
+            removeSeed(seed, blockedSeeds, setBlockedSeeds)
+          }
+        />
+      </div>
+    </div>
+  );
+
+  const advancedSection = (
+    <div>
+      <div className={style.check_box}>
+        <label htmlFor="overwrite-existing">Overwrite existing playlist</label>
+        <input
+          type="checkbox"
+          checked={overwriteExisting}
+          onChange={handleOverwriteExisting}
+          name="overwrite-existing"
+        ></input>
+      </div>
+      <div className={style.check_box}>
+        <label htmlFor="opt-in">Opt into texts for this playlist</label>
+        <input
+          type="checkbox"
+          checked={optInText}
+          onChange={handleOptInText}
+          name="opt-in"
+        ></input>
+      </div>
+      <Input
+        placeholder="Phone Number"
+        handleChange={handlePhoneNumber}
+        value={phoneNumber}
+        disabled={!optInText}
+      />
+    </div>
+  );
+
+  const sharingSection = <div>coming soon</div>;
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -343,46 +415,13 @@ const GeneratorBuilder = (props: AuthProps) => {
           disabled={ScheduleTypes.WEEKLY !== generatorFrequency}
         />
       </div>
-      <label htmlFor="opt-in">Opt into texts for this playlist</label>
-      <br></br>
-      <input
-        type="checkbox"
-        checked={optInText}
-        onChange={handleOptInText}
-        name="opt-in"
-      ></input>
-      <label htmlFor="overwrite-existing">Overwrite existing playlist</label>
-      <br></br>
-      <input
-        type="checkbox"
-        checked={overwriteExisting}
-        onChange={handleOverwriteExisting}
-        name="overwrite-existing"
-      ></input>
-      <Input
-        placeholder="Phone Number"
-        handleChange={handlePhoneNumber}
-        value={phoneNumber}
-        disabled={!optInText}
+      <TabBar
+        tabs={[TabNames.SEEDS, TabNames.ADVANCED, TabNames.SHARING]}
+        handleTabClick={handleTabClick}
+        selectedTab={selectedTab}
       />
-      <Button text="Add Seeds" clickHandler={handleAddButton} />
-      <FadedHr />
-      <div className={style.selection_section}>
-        <SelectedSeeds
-          seeds={generatorSeeds}
-          removeSeed={(seed: GeneratorSeed) =>
-            removeSeed(seed, generatorSeeds, setGeneratorSeeds)
-          }
-        />
-      </div>
-      <div className={style.selection_section}>
-        <SelectedSeeds
-          seeds={blockedSeeds}
-          removeSeed={(seed: GeneratorSeed) =>
-            removeSeed(seed, blockedSeeds, setBlockedSeeds)
-          }
-        />
-      </div>
+      {renderCurrentTab()}
+
       <div className={style.control_buttons}>
         <Link to="/dashboard">
           <Button text="Cancel" theme={ButtonTheme.SECONDARY} />
