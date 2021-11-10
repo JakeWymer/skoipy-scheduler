@@ -26,8 +26,8 @@ const LoginButton = () => {
   };
   return (
     <Button
-      text="Login with Spotify"
-      theme={ButtonTheme.SPOTIFY}
+      text="Discover New Music"
+      theme={ButtonTheme.BLUE}
       clickHandler={handleSpotifyLogin}
     />
   );

@@ -4,6 +4,7 @@ export enum ButtonTheme {
   DISCORD = `discord`,
   SPOTIFY = `spotify`,
   GREEN = `green`,
+  BLUE = `blue`,
 }
 
 export type ButtonProps = {

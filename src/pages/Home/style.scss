@@ -1,37 +1,66 @@
 @import "../../styles/colors.scss";
 
-section {
+.landing {
+  color: white;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 440px;
-}
+  height: 100vh;
+  background: url(Assets/telescope-flipped.svg);
+  background-repeat: no-repeat;
+  background-position-y: center;
+  background-position-x: right;
+  background-size: cover;
 
-.hero {
-  background: linear-gradient(90deg, $skoip-navy 3.38%, $skoip-green 100%);
-  color: white;
-  text-align: center;
-  justify-content: center;
-  height: 540px;
-  h1 {
-    margin-top: 0;
-    margin-bottom: 0;
+  .logo {
+    position: absolute;
+    top: 45px;
+    left: 10%;
+    font-size: 28px;
+    font-weight: bold;
   }
-  h2 {
-    margin: 40px;
+
+  .landing-content {
+    width: 33%;
+    margin-left: 10%;
+
+    h1 {
+      font-size: 64px;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 40px 0px;
+    }
   }
 }
 
-.landing-content-row {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 40px;
-  margin-bottom: 40px;
-  width: 100%;
-}
+@media only screen and (max-width: 1387px) {
+  .landing {
+    text-align: center;
+    justify-content: center;
+    background: url(Assets/starry-background.png);
+    background-position-x: center;
 
-.playlist-generator {
-  background-color: $skoip-navy;
-  color: white;
+    .landing-content {
+      width: 100%;
+      padding: 20px;
+      margin: 0px;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
+      h1 {
+        font-size: 50px;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+      h2 {
+        font-size: 20px;
+        margin: 40px 0px;
+      }
+    }
+  }
 }
