@@ -7,7 +7,7 @@ const App = () => {
   return (
     <div className="App">
       <BrowserRouter>
-        <Header />
+        {window.location.pathname !== "/" ? <Header /> : null}
         <div className="content">
           <Router />
         </div>

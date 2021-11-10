@@ -27,6 +27,14 @@
     }
   }
 
+  &.blue-theme {
+    background-color: $skoipy-blue;
+
+    &:hover {
+      background-color: lighten($skoipy-blue, 10);
+    }
+  }
+
   &.discord-theme {
     background-color: $discord-purple;
 
