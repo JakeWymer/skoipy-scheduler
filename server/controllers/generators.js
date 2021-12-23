@@ -66,9 +66,9 @@ const createGenerator = async (ctx) => {
 
 const generatePlaylist = async (ctx) => {
   const response = { isError: false };
+  const generatorId = parseInt(ctx.params.id);
+  const user = ctx.state.user;
   try {
-    const generatorId = parseInt(ctx.params.id);
-    const user = ctx.state.user;
     const generator = await Generator.findOne({
       where: {
         id: generatorId,
@@ -78,12 +78,13 @@ const generatePlaylist = async (ctx) => {
     if (user.id !== generator.User.id) {
       throw new Error("Only owner can generate playlist");
     }
-    await buildPlaylist(generator, user);
+    const playlist = await buildPlaylist(generator, user);
     mp.track(EVENTS.PLAYLIST_GENERATED, {
       [PROPERTIES.USER_ID]: user.id,
       [PROPERTIES.GENERATOR_ID]: generatorId,
       [PROPERTIES.DISTINCT_ID]: user.id,
     });
+    response.playlist = playlist;
   } catch (err) {
     console.log(err);
     mp.track(EVENTS.PLAYLIST_GENERATION_FAILED, {
@@ -117,6 +118,7 @@ const buildPlaylist = async (generator, user) => {
         .then((message) => console.log(message.sid))
         .done();
     }
+    return playlist;
   } catch (err) {
     console.log(err);
     throw new Error(`Could not create playlist`);

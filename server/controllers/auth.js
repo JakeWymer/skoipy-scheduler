@@ -1,12 +1,15 @@
 const btoa = require("btoa");
 const fetch = require("node-fetch");
-const { User } = require("../models");
+const uuid4 = require("uuid4");
+const crypto = require("crypto");
+const { User, ApikeyUser } = require("../models");
 const { mp, EVENTS, PROPERTIES } = require("../tracking");
 
 const spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
 const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 const spotifyCallbackUrl = process.env.SPOTIFY_CALLBACK_URL;
 const authRedirect = `${process.env.BASE_URL}/dashboard`;
+const hashSecret = process.env.HASH_SECRET;
 
 const spotifyAuthUrl = `https://accounts.spotify.com/authorize?client_id=${spotifyClientId}&response_type=code&redirect_uri=${encodeURI(
   spotifyCallbackUrl
@@ -133,6 +136,52 @@ const getSpotifyUser = async (accessToken) => {
   return await rawResponse.json();
 };
 
+const generateApiKey = async (ctx) => {
+  let existingApikeyUser = await ApikeyUser.findOne({
+    where: {
+      user_id: ctx.state.user.id,
+    },
+  });
+  if(existingApikeyUser) {
+    await existingApikeyUser.destroy();
+  }
+
+  const key = uuid4();
+  let response = {isError: false};
+  const hash = hashValue(key);
+
+  await ApikeyUser.create({
+    api_key: hash,
+    user_id: ctx.state.user.id, 
+  });
+
+  response.apiKey = key; 
+
+  return ctx.body = response;
+}
+
+const getUserByApiKey = async (apiKey) => {
+  const hashedKey = hashValue(apiKey);
+  let apikeyUser = await ApikeyUser.findOne({
+    where: {
+      api_key: hashedKey,
+    },
+    include: User,
+  });
+
+  return apikeyUser.User
+}
+
+const hashValue = (str) => {
+  // create a sha-256 hasher
+  const sha256Hasher = crypto.createHmac("sha256", hashSecret);
+
+  // hash the string
+  // and set the output format
+  const hash = sha256Hasher.update(str).digest("base64");
+  return hash;
+}
+
 module.exports = {
   getUser,
   logOut,
@@ -140,4 +189,6 @@ module.exports = {
   spotifyCallback,
   fetchTokens,
   GrantType,
+  getUserByApiKey,
+  generateApiKey,
 };

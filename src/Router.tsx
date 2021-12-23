@@ -4,6 +4,7 @@ import AuthedRoute from "./AuthedRoute";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import GeneratorBuilder from "./pages/GeneratorBuilder";
+import Settings from "./pages/Settings";
 
 const Router = () => {
   return (
@@ -15,6 +16,7 @@ const Router = () => {
         authedComponent={GeneratorBuilder}
       />
       <AuthedRoute path="/generator/new" authedComponent={GeneratorBuilder} />
+      <AuthedRoute path="/settings" authedComponent={Settings} />
     </Switch>
   );
 };

@@ -69,6 +69,19 @@ router.delete(
   generatorController.deleteGenerator
 );
 
+router.post(
+  `/apikey/generate`,
+  middleware.checkAuth,
+  authController.generateApiKey
+)
+
+// Generate playlist via api key
+router.post(
+  `/api/generators/:id/generate`,
+  middleware.checkApiKey,
+  generatorController.generatePlaylist
+)
+
 app.use((ctx, next) => {
   ctx.type = "html";
   ctx.body = fs.readFileSync(`${buildFolderPath}/index.html`);
