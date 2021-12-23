@@ -36,6 +36,7 @@ const Header = () => {
           <div className="title">Skoip</div>
         </Link>
       </div>
+      <div>{isLoggedIn && (<Link to="/settings">Settings</Link>)}</div>
       <div>{isLoggedIn && <Button text="Log out" clickHandler={logout} />}</div>
     </header>
   );

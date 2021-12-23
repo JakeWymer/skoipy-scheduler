@@ -1,5 +1,5 @@
-const { User } = require("./models");
-const { fetchTokens, GrantType } = require("./controllers/auth");
+const { User, ApikeyUser } = require("./models");
+const { fetchTokens, GrantType, getUser, getUserByApiKey } = require("./controllers/auth");
 
 const checkAuth = async (ctx, next) => {
   try {
@@ -29,6 +29,33 @@ const checkAuth = async (ctx, next) => {
   await next();
 };
 
+const checkApiKey = async (ctx, next) => {
+  const body = ctx.request.body;
+
+  if (!body.apiKey) {
+    ctx.response.status = 401;
+    throw new Error("API key required");
+  }
+
+  const user = await getUserByApiKey(body.apiKey);
+
+  if (!user) {
+    ctx.response.status = 401;
+    throw new Error("User not found");
+  }
+
+  const tokens = await fetchTokens(
+    GrantType.REFRESH_TOKEN,
+    user.refresh_token
+  );
+
+  ctx.state.user = user;
+  ctx.state.user.accessToken = tokens.accessToken;
+
+  await next();
+}
+
 module.exports = {
   checkAuth,
+  checkApiKey,
 };
