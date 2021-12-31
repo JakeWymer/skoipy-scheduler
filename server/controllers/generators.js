@@ -1,4 +1,5 @@
 require("dotenv").config();
+const _ = require("lodash");
 const fetch = require("node-fetch");
 const twilio = require("twilio")(
   process.env.TWILIO_ACCOUNT_ID,
@@ -154,7 +155,7 @@ const getRecommendedTracks = async (accessToken, seeds, blockedSeeds) => {
   const seedArtists = [];
   const seedGenres = [];
   const seedTracks = [];
-  const shuffledSeeds = seeds.sort(() => Math.random() - 0.5).slice(0, 5);
+  const shuffledSeeds = _.shuffle(seeds).slice(0, 5);
   shuffledSeeds.forEach((seed) => {
     if (seed.type === `Artist`) {
       seedArtists.push(seed.id);
@@ -166,7 +167,7 @@ const getRecommendedTracks = async (accessToken, seeds, blockedSeeds) => {
     `,`
   )}&seed_tracks=${seedTracks.join(`,`)}&seed_genres=${seedGenres.join(
     `,`
-  )}&limit=50`;
+  )}&limit=100`;
   const rawResponse = await fetch(finalUrl, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -174,7 +175,8 @@ const getRecommendedTracks = async (accessToken, seeds, blockedSeeds) => {
     method: "GET",
   });
   const recommendationRes = await rawResponse.json();
-  const tracks = recommendationRes.tracks.filter((track) => {
+  const shuffledTracks = _.shuffle(recommendationRes.tracks);
+  const tracks = shuffledTracks.filter((track) => {
     const containsBlockedArtist = track.artists.some((artist) => {
       return blockedSeedsIds.includes(artist.id);
     });
