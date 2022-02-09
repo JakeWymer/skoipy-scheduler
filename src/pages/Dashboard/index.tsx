@@ -31,9 +31,11 @@ const Dashboard = (props: AuthProps) => {
       <div className={styles.greeting}>
         <h2>My Generators</h2>
       </div>
-      <Link to="/generator/new">
-        <Button text="Add Generator" theme={ButtonTheme.BLUE} />
-      </Link>
+      <div className={styles.add_generator}>
+        <Link to="/generator/new">
+          <Button text="Add Generator" theme={ButtonTheme.BLUE} />
+        </Link>
+      </div>
       <hr />
       <SpinnerOrComponent
         isLoading={isLoading}
