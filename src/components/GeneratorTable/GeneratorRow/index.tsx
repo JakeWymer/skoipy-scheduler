@@ -32,7 +32,7 @@ const GeneratorRow = (props: GeneratorRowProps) => {
       return (
         <div className={styles.sub_menu_row} key={seed.id}>
           <img
-            alt="seed image"
+            alt="seed"
             src={seed.type === SeedType.ARTIST ? ArtistImg : SongImg}
           />
           <div>{seed.name}</div>
