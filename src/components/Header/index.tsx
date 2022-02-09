@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Button from "../Button";
 import ApiClient from "../../api";
 import { UserResponse } from "../../AuthedRoute";
+import { ButtonTheme } from "../Button/types";
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -36,8 +37,18 @@ const Header = () => {
           <div className="title">Skoip</div>
         </Link>
       </div>
-      <div>{isLoggedIn && (<Link to="/settings">Settings</Link>)}</div>
-      <div>{isLoggedIn && <Button text="Log out" clickHandler={logout} />}</div>
+      <div className="header-menu">
+        <div>{isLoggedIn && <Link to="/settings">Settings</Link>}</div>
+        <div>
+          {isLoggedIn && (
+            <Button
+              text="Log out"
+              theme={ButtonTheme.LINK}
+              clickHandler={logout}
+            />
+          )}
+        </div>
+      </div>
     </header>
   );
 };

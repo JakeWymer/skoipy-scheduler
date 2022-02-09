@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import Button from "../../components/Button";
 import { Generator, GeneratorResponse } from "./types";
-import GeneratorCard from "../../components/GeneratorCard";
 import styles from "./style.module.scss";
 import { Link } from "react-router-dom";
 import { AuthProps } from "../../AuthedRoute";
 import SpinnerOrComponent from "../../components/SpinnerOrComponent";
 import ApiClient from "../../api";
+import { ButtonTheme } from "../../components/Button/types";
+import GeneratorTable from "../../components/GeneratorTable";
 
 const Dashboard = (props: AuthProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -21,41 +22,22 @@ const Dashboard = (props: AuthProps) => {
     );
   }, []);
 
-  const mapGenerators = () => {
-    return userGenerators.map((generator, i) => {
-      return (
-        <GeneratorCard
-          key={i}
-          generator={generator}
-          setUserGenerators={setUserGenerators}
-          isOwner={props.user.id === generator.owner_id}
-        />
-      );
-    });
-  };
-
-  const generatorsRenderer = () => {
-    return (
-      <div className={styles.generator_cards_wrapper}>
-        {userGenerators.length
-          ? mapGenerators()
-          : "Add some generators to view them here"}
-      </div>
-    );
+  const tableRenderer = () => {
+    return <GeneratorTable generators={userGenerators} />;
   };
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.greeting}>
-        <h1>Heyoo, {props.user.username}!</h1>
+        <h2>My Generators</h2>
       </div>
       <Link to="/generator/new">
-        <Button text="Schedule New Generator" />
+        <Button text="Add Generator" theme={ButtonTheme.BLUE} />
       </Link>
       <hr />
       <SpinnerOrComponent
         isLoading={isLoading}
-        componentRenderer={generatorsRenderer}
+        componentRenderer={tableRenderer}
       />
     </div>
   );

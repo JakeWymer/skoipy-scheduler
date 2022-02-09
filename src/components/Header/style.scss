@@ -2,12 +2,27 @@
 
 header {
   align-items: center;
-  background: linear-gradient(90deg, $skoip-navy 3.38%, $skoip-green 100%);
+  background: linear-gradient(
+    90deg,
+    $skoipy-dark-purple 60.26%,
+    $skoipy-warm-purple 100%
+  );
   color: white;
   display: flex;
   height: 10vh;
   justify-content: space-between;
   padding: 0px 25px;
+}
+
+.header-menu {
+  display: flex;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+
+  a {
+    color: white;
+  }
 }
 
 .title {

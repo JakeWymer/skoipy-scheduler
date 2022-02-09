@@ -10,17 +10,17 @@
   border-radius: 5px;
 
   &.primary-theme {
-    background-color: $skoip-navy;
+    background-color: $skoipy-light-blue;
 
     &:hover {
-      background-color: lighten($skoip-navy, 10);
+      background-color: lighten($skoipy-light-blue, 10);
     }
   }
 
   &.secondary-theme {
     background-color: white;
-    border: 1px solid $skoip-navy;
-    color: $skoip-navy;
+    border: 1px solid $skoipy-light-blue;
+    color: $skoipy-light-blue;
 
     &:hover {
       background-color: darken(white, 5);
@@ -28,34 +28,26 @@
   }
 
   &.blue-theme {
-    background-color: $skoipy-blue;
+    background-color: $skoipy-light-blue;
 
     &:hover {
-      background-color: lighten($skoipy-blue, 10);
-    }
-  }
-
-  &.discord-theme {
-    background-color: $discord-purple;
-
-    &:hover {
-      background-color: lighten($discord-purple, 10);
-    }
-  }
-
-  &.spotify-theme {
-    background-color: $spotify-green;
-
-    &:hover {
-      background-color: lighten($spotify-green, 2);
+      background-color: lighten($skoipy-light-blue, 10);
     }
   }
 
   &.green-theme {
-    background-color: $skoip-green;
+    background-color: $skoipy-green;
 
     &:hover {
-      background-color: lighten($skoip-green, 10);
+      background-color: lighten($skoipy-green, 10);
+    }
+  }
+
+  &.red-theme {
+    background-color: $skoipy-red;
+
+    &:hover {
+      background-color: lighten($skoipy-red, 10);
     }
   }
 }

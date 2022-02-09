@@ -1,4 +1,5 @@
 import Button from "../Button";
+import { ButtonTheme } from "../Button/types";
 import { SeedType } from "../SearchBar/types";
 import styles from "./style.module.scss";
 
@@ -23,11 +24,13 @@ const artistItem = (props: ArtistItemProps) => {
       <span className={styles.artist_name}>{artistName}</span>
       <Button
         text={isAdded ? "Remove" : "Add"}
+        theme={ButtonTheme.SECONDARY}
         clickHandler={() => addHandler(artist, SeedType.ARTIST)}
       />
       {blockHandler && (
         <Button
           text={isBlocked ? "Unblock" : "Block"}
+          theme={ButtonTheme.SECONDARY}
           clickHandler={() => blockHandler(artist, SeedType.ARTIST)}
         />
       )}

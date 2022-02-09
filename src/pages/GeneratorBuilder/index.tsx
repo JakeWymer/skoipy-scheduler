@@ -5,7 +5,7 @@ import Button from "../../components/Button";
 import { Link, Redirect, useLocation, useParams } from "react-router-dom";
 import { ButtonTheme } from "../../components/Button/types";
 import Input from "../../components/Input";
-import { GeneratorSeed } from "../Dashboard/types";
+import { GeneratorResponse, GeneratorSeed } from "../Dashboard/types";
 import SearchBar from "../../components/SearchBar";
 
 import style from "./style.module.scss";
@@ -45,6 +45,7 @@ const GeneratorBuilder = (props: AuthProps) => {
   const [phoneNumber, setPhoneNumber] = useState<string>(``);
   const [overwriteExisting, setOverwriteExisting] = useState<boolean>(false);
   const [generatorOwner, setGeneratorOwner] = useState<number>();
+  const [generatorId, setGeneratorId] = useState<number>();
   const [selectedTab, setSelectedTab] = useState<string>(TabNames.SEEDS);
 
   const { state }: { state: LinkDataState } = useLocation();
@@ -76,6 +77,7 @@ const GeneratorBuilder = (props: AuthProps) => {
     let generatorId = params?.generatorId && parseInt(params.generatorId);
     if (generatorId) {
       setIsEditing(true);
+      setGeneratorId(generatorId);
     }
     if (isEditing) {
       if (state?.generator) {
@@ -359,6 +361,29 @@ const GeneratorBuilder = (props: AuthProps) => {
     </div>
   );
 
+  const deleteGenerator = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#db2b39",
+      cancelButtonColor: "#8B939C",
+      confirmButtonText: "Delete",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const data = await ApiClient.apiDelete<GeneratorResponse>(
+          `/generators/${generatorId}`,
+          `Could not delete ${generatorName}`,
+          `Deleted ${generatorName}`
+        );
+        if (!data.isError) {
+          window.location.href = "/dashboard";
+        }
+      }
+    });
+  };
+
   const advancedSection = (
     <div>
       <div className={style.check_box}>
@@ -385,6 +410,13 @@ const GeneratorBuilder = (props: AuthProps) => {
         value={phoneNumber}
         disabled={!optInText}
       />
+      <div className={style.delete_generator}>
+        <Button
+          theme={ButtonTheme.RED}
+          text="Delete Generator"
+          clickHandler={deleteGenerator}
+        />
+      </div>
     </div>
   );
 
@@ -396,12 +428,23 @@ const GeneratorBuilder = (props: AuthProps) => {
 
   return (
     <div className={style.wrapper}>
-      <Input
-        handleChange={handleNameInput}
-        value={generatorName}
-        fontSize={32}
-        placeholder="Generator Name"
-      />
+      <div className={style.top_row}>
+        <Input
+          handleChange={handleNameInput}
+          value={generatorName}
+          fontSize={32}
+          placeholder="Generator Name"
+        />
+        <div className={style.control_buttons}>
+          <Button
+            text={isEditing ? "Save" : "Create"}
+            clickHandler={createOrUpdateGenerator}
+          />
+          <Link to="/dashboard">
+            <Button text="Cancel" theme={ButtonTheme.SECONDARY} />
+          </Link>
+        </div>
+      </div>
       <div className={style.scheduling_section}>
         <Select
           options={frequencyOptions()}
@@ -421,16 +464,6 @@ const GeneratorBuilder = (props: AuthProps) => {
         selectedTab={selectedTab}
       />
       {renderCurrentTab()}
-
-      <div className={style.control_buttons}>
-        <Link to="/dashboard">
-          <Button text="Cancel" theme={ButtonTheme.SECONDARY} />
-        </Link>
-        <Button
-          text={isEditing ? "Save" : "Create"}
-          clickHandler={createOrUpdateGenerator}
-        />
-      </div>
     </div>
   );
 };

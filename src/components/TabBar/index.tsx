@@ -1,6 +1,7 @@
 import "./style.scss";
+import { TabBarProps } from "./types";
 
-const TabBar = (props: any) => {
+const TabBar = (props: TabBarProps) => {
   const renderTabs = () => {
     return props.tabs.map((tab: string) => {
       const isSelected = tab === props.selectedTab ? "selected" : "";
@@ -8,6 +9,7 @@ const TabBar = (props: any) => {
         <div
           className={`${isSelected} tab`}
           onClick={() => props.handleTabClick(tab)}
+          key={tab}
         >
           {tab}
         </div>

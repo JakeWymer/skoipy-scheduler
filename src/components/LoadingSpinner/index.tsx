@@ -1,14 +1,17 @@
-import MoonLoader from "react-spinners/MoonLoader";
 import styles from "./style.module.scss";
+import BounceLoader from "react-spinners/BounceLoader";
 
 type LoadingSpinnerProps = {
   color?: string;
+  size?: number;
 };
 
 const LoadingSpinner = (props: LoadingSpinnerProps) => {
+  const spinnerSize = props.size || 50;
+  const spinnerColor = props.color || "#5200af";
   return (
     <div className={styles.wrapper}>
-      <MoonLoader color={props.color || "#3a405a"} loading size={50} />
+      <BounceLoader color={spinnerColor} loading size={spinnerSize} />
     </div>
   );
 };

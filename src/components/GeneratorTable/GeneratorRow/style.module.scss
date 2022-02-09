@@ -1,0 +1,51 @@
+@import "../../../styles/colors.scss";
+
+.row {
+  height: 65px;
+  text-align: center;
+  &:hover {
+    background-color: $skoipy-light-grey;
+  }
+}
+
+.name {
+  color: $skoipy-dark-purple;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.dropdown_icon {
+  width: 13px;
+  cursor: pointer;
+}
+
+.expanded {
+  transform: rotate(90deg);
+}
+
+.sub_menu_cell {
+  padding: 20px;
+}
+
+.sub_menu_table {
+  border: 2px solid $skoipy-light-grey;
+  min-height: 100px;
+  border-radius: 5px;
+}
+
+.sub_menu_header {
+  padding: 20px;
+}
+
+.sub_menu_row {
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  border-top: 1px solid $skoipy-light-grey;
+  border-bottom: 1px solid $skoipy-light-grey;
+  img {
+    width: 40px;
+    margin-right: 10px;
+    padding: 20px;
+  }
+}

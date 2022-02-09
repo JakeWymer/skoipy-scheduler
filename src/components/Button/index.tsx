@@ -16,7 +16,11 @@ const Button = (props: ButtonProps) => {
   const clickHandler = props.clickHandler || noop;
 
   return (
-    <div className={allClasses} onClick={clickHandler}>
+    <div
+      className={allClasses}
+      onClick={clickHandler}
+      style={props.styleOverride}
+    >
       {props.text}
     </div>
   );
