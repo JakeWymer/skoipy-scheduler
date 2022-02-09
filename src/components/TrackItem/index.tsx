@@ -1,4 +1,5 @@
 import Button from "../Button";
+import { ButtonTheme } from "../Button/types";
 import { SeedType } from "../SearchBar/types";
 import styles from "./style.module.scss";
 
@@ -30,11 +31,13 @@ const TrackItem = (props: TrackItemProps) => {
       </div>
       <Button
         text={isAdded ? "Remove" : "Add"}
+        theme={ButtonTheme.SECONDARY}
         clickHandler={() => addHandler(track, SeedType.TRACK)}
       />
       {blockHandler && (
         <Button
           text={isBlocked ? "Unblock" : "Block"}
+          theme={ButtonTheme.SECONDARY}
           clickHandler={() => blockHandler(track, SeedType.TRACK)}
         />
       )}

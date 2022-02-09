@@ -1,0 +1,15 @@
+@import "../../styles/colors.scss";
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.header_row {
+  background-color: $skoipy-light-grey;
+  color: $skoipy-dark-grey;
+
+  th {
+    padding: 15px 0;
+  }
+}

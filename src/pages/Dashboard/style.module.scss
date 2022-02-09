@@ -1,14 +1,14 @@
 @import "../../styles/colors.scss";
 
 .wrapper {
-  padding: 0px 40px;
+  padding: 0px 80px;
 }
 
 .greeting {
-  height: 300px;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 100px;
 }
 
 .generator_cards_wrapper {
@@ -24,7 +24,7 @@ hr {
   background: linear-gradient(
     to right,
     rgba(0, 0, 0, 0),
-    $light-grey,
+    $skoipy-light-grey,
     rgba(0, 0, 0, 0)
   );
 }
