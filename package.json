@@ -20,7 +20,6 @@
     "chalk": "^4.1.1",
     "classnames": "^2.3.1",
     "crypto": "^1.0.1",
-    "dotenv": "^10.0.0",
     "find-config": "^1.0.0",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
@@ -31,14 +30,13 @@
     "mixpanel": "^0.13.0",
     "mixpanel-browser": "^2.41.0",
     "node-fetch": "^2.6.1",
-    "node-sass": "^6.0.0",
     "pg": "^8.6.0",
     "pg-hstore": "^2.3.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-modal": "^3.13.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "5.0.1",
     "react-spinners": "^0.11.0",
     "sequelize": "^6.6.2",
     "sweetalert2": "^11.1.2",
@@ -55,7 +53,7 @@
     "test": "jest",
     "eject": "react-scripts eject",
     "server": "nodemon server/index.js",
-    "start-dev": "concurrently \"yarn server\" \"yarn start\"",
+    "start-dev": "concurrently \"npm run server\" \"npm run start\"",
     "migrate": "npx sequelize-cli db:migrate",
     "make-migration": "npx sequelize-cli migration:generate --name $1",
     "generate-playlists": "/usr/local/bin/node server/crons/generatePlaylists.js"
@@ -81,6 +79,7 @@
   "devDependencies": {
     "@types/react-modal": "^3.12.0",
     "concurrently": "^6.2.0",
-    "nodemon": "^2.0.9"
+    "nodemon": "^2.0.9",
+    "sass": "^1.63.6"
   }
 }
