@@ -1,4 +1,3 @@
-require("dotenv").config();
 const _ = require("lodash");
 const fetch = require("node-fetch");
 const twilio = require("twilio")(
